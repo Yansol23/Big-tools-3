@@ -7,10 +7,10 @@ Adaptado al flujo de categorías dentro de cada máquina.
 from typing import Dict, Any, List, Optional
 import json
 from pathlib import Path
-from Backend.api.nodo import Nodo
+from api.nodo import Nodo
 
 JSON_LATEST = 1
-DEFAULT_JSON = "Backend/data/base_conocimiento.json"  # ruta por defecto al JSON
+DEFAULT_JSON = "data/base_conocimiento.json"  # ruta por defecto al JSON
 
 
 class BaseConocimiento:

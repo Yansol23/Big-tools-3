@@ -1,15 +1,11 @@
-"""
-app.py
-Entrada principal de la API del sistema experto.
-"""
+"""Sistema Experto de Diagnóstico - Big Tools"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from Backend.api.routes import router
-
-# ---------------------------------------------------------------------
-# Instancia de FastAPI
-# ---------------------------------------------------------------------
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from api.routes import router
+from pathlib import Path
 
 app = FastAPI(
     title="Sistema Experto de Diagnóstico de Máquinas Big Tools",
@@ -17,32 +13,27 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# ---------------------------------------------------------------------
-# Configuración CORS
-# ---------------------------------------------------------------------
-
-origins = [
-    "*",  # Permite cualquier origen, útil para desarrollo. Ajustar en producción.
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------------------------------------------------------------------
-# Inclusión de rutas
-# ---------------------------------------------------------------------
-
+# Incluir rutas de la API
 app.include_router(router)
 
-# ---------------------------------------------------------------------
-# Ruta raíz opcional
-# ---------------------------------------------------------------------
+# Configurar archivos estáticos del Frontend
+frontend_path = Path(__file__).parent.parent / "Frontend"
+app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
 
 @app.get("/")
 def root():
-    return {"mensaje": "API del Sistema Experto activa"}
+    """Redirige a la página principal del frontend"""
+    return FileResponse(str(frontend_path / "index.html"))
+
+@app.get("/admin")
+def admin():
+    """Página de administración"""
+    return FileResponse(str(frontend_path / "admin.html"))

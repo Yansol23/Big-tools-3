@@ -6,8 +6,8 @@ Compatible con BaseConocimiento y Nodo actuales.
 """
 
 from typing import Optional, List
-from Backend.api.base_conocimiento import BaseConocimiento
-from Backend.api.nodo import Nodo
+from api.base_conocimiento import BaseConocimiento
+from api.nodo import Nodo
 
 
 class MotorInferencia:

@@ -259,6 +259,137 @@ body {
 }
 
 /* ---------------------------
+   Usuario display
+---------------------------- */
+.user-display {
+    color: var(--text-color);
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background-color: #f44336 !important;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f !important;
+}
+
+/* ---------------------------
+   Botón de Manual
+---------------------------- */
+.manual-btn {
+    background-color: #1976d2;
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.manual-btn:hover {
+    background-color: #1565c0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.manual-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.manual-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px 0;
+}
+
+/* ---------------------------
+   Modal de Login
+---------------------------- */
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#login-form input {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+#login-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+#login-form button {
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#login-form button:hover {
+    background-color: #0056b3;
+}
+
+.error-msg {
+    color: #f44336;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+/* ---------------------------
    Responsive
 ---------------------------- */
 @media screen and (max-width: 600px) {
@@ -273,5 +404,14 @@ body {
     .option-btn {
         flex: 1 1 100%;
         text-align: center;
+    }
+    
+    .manual-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        padding: 30px 20px;
     }
 }
