@@ -57,9 +57,8 @@ logoutButton.addEventListener("click", async () => {
         await fetch(`${API_URL}/admin/logout`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ token: token })
+            "Authorization": `Bearer ${token}`
+          }
         });
       } catch (error) {
         console.error("Error al cerrar sesión:", error);

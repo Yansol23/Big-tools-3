@@ -110,9 +110,8 @@ document.getElementById('logout-button').addEventListener('click', async () => {
       await fetch(`${API_URL}/admin/logout`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: sessionState.token })
+          'Authorization': `Bearer ${sessionState.token}`
+        }
       });
     } catch (error) {
       console.error('Error en logout:', error);
