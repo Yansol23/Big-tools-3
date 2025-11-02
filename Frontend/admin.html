@@ -84,12 +84,40 @@
                         <p class="loading">Cargando...</p>
                     </div>
                 </div>
+
+                <!-- Gráfico de Máquinas -->
+                <div class="stat-card full-width">
+                    <div class="stat-header">
+                        <div class="stat-icon"></div>
+                        <h3>Diagnosticos por Maquina</h3>
+                    </div>
+                    <canvas id="chartMaquinas"></canvas>
+                </div>
+
+                <!-- Gráfico de Categorías -->
+                <div class="stat-card full-width">
+                    <div class="stat-header">
+                        <div class="stat-icon"></div>
+                        <h3>Diagnosticos por Categoria</h3>
+                    </div>
+                    <canvas id="chartCategorias"></canvas>
+                </div>
+
+                <!-- Gráfico de Tendencia -->
+                <div class="stat-card full-width">
+                    <div class="stat-header">
+                        <div class="stat-icon"></div>
+                        <h3>Tendencia de Diagnosticos (Ultimos 10)</h3>
+                    </div>
+                    <canvas id="chartTendencia"></canvas>
+                </div>
             </div>
 
-                <!-- Botón de actualización -->
-                <div class="refresh-container">
-                    <button id="refresh-button" class="refresh-btn">Actualizar Estadísticas</button>
-                </div>
+            <!-- Botones de acción -->
+            <div class="refresh-container">
+                <button id="refresh-button" class="refresh-btn">Actualizar Estadísticas</button>
+                <button id="export-pdf-button" class="export-pdf-btn">Exportar Estadisticas a PDF</button>
+            </div>
             </div>
 
             <!-- Sección de Gestión de Manuales -->
@@ -161,6 +189,10 @@
         </main>
     </div>
 
+    <!-- Librería Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Librería jsPDF para exportar a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/static/js/admin.js"></script>
 </body>
 

@@ -211,6 +211,104 @@ function crearBotonManual(maquina, referencia) {
   return btnContainer;
 }
 
+function crearBotonExportarPDF(diagnosticoData) {
+  const btnContainer = document.createElement("div");
+  btnContainer.classList.add("manual-button-container");
+  btnContainer.style.marginTop = "15px";
+
+  const btn = document.createElement("button");
+  btn.classList.add("manual-btn");
+  btn.style.backgroundColor = "#e53935";
+  btn.innerHTML = `Descargar Diagnostico PDF`;
+  btn.onclick = () => exportarDiagnosticoAPDF(diagnosticoData);
+
+  btnContainer.appendChild(btn);
+  return btnContainer;
+}
+
+function exportarDiagnosticoAPDF(data) {
+  // Usar jsPDF (lo cargaremos desde CDN)
+  if (typeof jspdf === 'undefined') {
+    alert('Cargando libreria PDF...');
+    return;
+  }
+
+  const { jsPDF } = jspdf;
+  const doc = new jsPDF();
+  
+  // Configurar el documento
+  doc.setFont("helvetica");
+  
+  // Título
+  doc.setFontSize(20);
+  doc.setTextColor(211, 47, 47);
+  doc.text("Big Tools - Diagnostico", 20, 20);
+  
+  // Línea separadora
+  doc.setDrawColor(211, 47, 47);
+  doc.setLineWidth(0.5);
+  doc.line(20, 25, 190, 25);
+  
+  // Información del diagnóstico
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  
+  let y = 35;
+  
+  if (data.maquina) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Maquina:", 20, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(data.maquina, 50, y);
+    y += 10;
+  }
+  
+  if (data.categoria) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Categoria:", 20, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(data.categoria, 50, y);
+    y += 10;
+  }
+  
+  if (data.falla) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Falla Detectada:", 20, y);
+    y += 7;
+    doc.setFont("helvetica", "normal");
+    const fallaLines = doc.splitTextToSize(data.falla, 170);
+    doc.text(fallaLines, 20, y);
+    y += (fallaLines.length * 7) + 5;
+  }
+  
+  if (data.solucion) {
+    doc.setFont("helvetica", "bold");
+    doc.text("Solucion:", 20, y);
+    y += 7;
+    doc.setFont("helvetica", "normal");
+    const solucionLines = doc.splitTextToSize(data.solucion, 170);
+    doc.text(solucionLines, 20, y);
+    y += (solucionLines.length * 7) + 5;
+  }
+  
+  // Fecha y hora
+  y += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  const fecha = new Date().toLocaleString('es-ES');
+  doc.text(`Generado: ${fecha}`, 20, y);
+  
+  // Usuario
+  if (sessionState.username) {
+    y += 5;
+    doc.text(`Usuario: ${sessionState.username}`, 20, y);
+  }
+  
+  // Guardar el PDF
+  const nombreArchivo = `diagnostico_${data.maquina}_${Date.now()}.pdf`;
+  doc.save(nombreArchivo);
+}
+
 function handleApiResponse(response) {
   // Caso 1: Es una pregunta con opciones
   if (response.pregunta && response.opciones) {
@@ -240,8 +338,18 @@ function handleApiResponse(response) {
       }
     }
     
+    // Agregar botón para exportar a PDF
+    const diagnosticoData = {
+      maquina: response.maquina || sessionState.maquina,
+      categoria: sessionState.categoria,
+      falla: response.falla,
+      solucion: response.soluciones.join('. ')
+    };
+    const pdfBtn = crearBotonExportarPDF(diagnosticoData);
+    chatWindow.appendChild(pdfBtn);
+    
     // Ofrecer reinicio
-    addOptions(["🔁 Consultar otra máquina"], startChat);
+    addOptions(["Consultar otra maquina"], startChat);
   }
   // Caso 3: Es un mensaje simple o error
   else {
@@ -260,7 +368,9 @@ async function startChat() {
     if (!response.ok) throw new Error("No se pudo obtener la lista de máquinas.");
     
     const data = await response.json();
-    sessionState = { maquina: null, categoria: null }; // Reiniciar sesión
+    // Reiniciar solo las propiedades de diagnóstico, preservando la autenticación
+    sessionState.maquina = null;
+    sessionState.categoria = null;
     addOptions(data.maquinas, handleMachineSelection);
 
   } catch (error) {
@@ -289,8 +399,10 @@ async function handleCategorySelection(category) {
   addMessage(`Iniciando diagnóstico para: <strong>${category}</strong>`);
 
   try {
+    const maquinaEncoded = encodeURIComponent(sessionState.maquina);
+    const categoriaEncoded = encodeURIComponent(sessionState.categoria);
     const response = await fetch(
-      `${API_URL}/diagnosticar/iniciar/${sessionState.maquina}/${sessionState.categoria}`,
+      `${API_URL}/diagnosticar/iniciar/${maquinaEncoded}/${categoriaEncoded}`,
       {
         method: "POST",
       }
@@ -315,8 +427,10 @@ async function handleOptionSelection(respuesta) {
   }
 
   try {
+    const maquinaEncoded = encodeURIComponent(sessionState.maquina);
+    const categoriaEncoded = encodeURIComponent(sessionState.categoria);
     const response = await fetch(
-      `${API_URL}/diagnosticar/avanzar/${sessionState.maquina}/${sessionState.categoria}`,
+      `${API_URL}/diagnosticar/avanzar/${maquinaEncoded}/${categoriaEncoded}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

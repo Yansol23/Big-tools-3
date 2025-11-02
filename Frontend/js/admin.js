@@ -9,6 +9,10 @@ const dashboard = document.getElementById("dashboard");
 const usernameDisplay = document.getElementById("username-display");
 const logoutButton = document.getElementById("logout-button");
 const refreshButton = document.getElementById("refresh-button");
+const exportPdfButton = document.getElementById("export-pdf-button");
+
+// Variable global para almacenar las estadísticas actuales
+let estadisticasActuales = null;
 
 // -----------------------------------------
 // GESTIÓN DE AUTENTICACIÓN
@@ -89,7 +93,6 @@ async function cargarEstadisticas() {
   }
 
   try {
-    console.log("Cargando estadísticas...");
     const response = await fetch(`${API_URL}/admin/stats`, {
       method: "GET",
       headers: {
@@ -97,18 +100,14 @@ async function cargarEstadisticas() {
       },
     });
 
-    console.log("Respuesta del servidor:", response.status);
-
     if (!response.ok) {
       throw new Error("Error al cargar estadísticas");
     }
 
     const stats = await response.json();
-    console.log("Estadísticas recibidas:", stats);
 
     // Actualizar las estadísticas en el DOM
     actualizarEstadisticas(stats);
-    console.log("Estadísticas actualizadas en el DOM");
     
   } catch (error) {
     console.error("Error al cargar estadísticas:", error);
@@ -121,6 +120,9 @@ async function cargarEstadisticas() {
 // -----------------------------------------
 
 function actualizarEstadisticas(stats) {
+  // Guardar estadísticas globalmente para exportar a PDF
+  estadisticasActuales = stats;
+  
   // Total de diagnósticos
   document.getElementById("total-diagnosticos").textContent =
     stats.total_diagnosticos || 0;
@@ -200,6 +202,216 @@ function actualizarEstadisticas(stats) {
   } else {
     historialDiv.innerHTML = "<p class='no-data'>No hay historial disponible</p>";
   }
+  
+  // Crear gráficos con un pequeño delay para asegurar que el DOM esté listo
+  setTimeout(() => {
+    crearGraficos(stats);
+  }, 100);
+}
+
+// -----------------------------------------
+// GRAFICOS CON CHART.JS
+// -----------------------------------------
+
+let chartMaquinas, chartCategorias, chartTendencia;
+
+function crearGraficos(stats) {
+  // Verificar que Chart.js esté cargado
+  if (typeof Chart === 'undefined') {
+    return;
+  }
+
+  // Destruir gráficos anteriores si existen
+  if (chartMaquinas) chartMaquinas.destroy();
+  if (chartCategorias) chartCategorias.destroy();
+  if (chartTendencia) chartTendencia.destroy();
+
+  // Verificar que los canvas existan
+  const canvasMaquinas = document.getElementById('chartMaquinas');
+  const canvasCategorias = document.getElementById('chartCategorias');
+  const canvasTendencia = document.getElementById('chartTendencia');
+  
+  if (!canvasMaquinas || !canvasCategorias || !canvasTendencia) {
+    return;
+  }
+
+  // Gráfico de Máquinas (Barras)
+  const ctxMaquinas = canvasMaquinas.getContext('2d');
+  const maquinasData = stats.top_maquinas || [];
+  
+  chartMaquinas = new Chart(ctxMaquinas, {
+    type: 'bar',
+    data: {
+      labels: maquinasData.map(item => item.maquina),
+      datasets: [{
+        label: 'Diagnosticos',
+        data: maquinasData.map(item => item.cantidad),
+        backgroundColor: [
+          'rgba(211, 47, 47, 0.7)',
+          'rgba(33, 33, 33, 0.7)',
+          'rgba(245, 124, 0, 0.7)',
+          'rgba(56, 142, 60, 0.7)'
+        ],
+        borderColor: [
+          'rgba(211, 47, 47, 1)',
+          'rgba(33, 33, 33, 1)',
+          'rgba(245, 124, 0, 1)',
+          'rgba(56, 142, 60, 1)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  // Gráfico de Categorías (Dona)
+  const ctxCategorias = canvasCategorias.getContext('2d');
+  const categoriasData = stats.top_categorias || [];
+  
+  chartCategorias = new Chart(ctxCategorias, {
+    type: 'doughnut',
+    data: {
+      labels: categoriasData.map(item => item.categoria),
+      datasets: [{
+        data: categoriasData.map(item => item.cantidad),
+        backgroundColor: [
+          'rgba(211, 47, 47, 0.7)',
+          'rgba(33, 33, 33, 0.7)',
+          'rgba(245, 124, 0, 0.7)',
+          'rgba(56, 142, 60, 0.7)',
+          'rgba(25, 118, 210, 0.7)'
+        ],
+        borderColor: [
+          'rgba(211, 47, 47, 1)',
+          'rgba(33, 33, 33, 1)',
+          'rgba(245, 124, 0, 1)',
+          'rgba(56, 142, 60, 1)',
+          'rgba(25, 118, 210, 1)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right'
+        }
+      }
+    }
+  });
+
+  // Gráfico de Tendencia (Línea)
+  const ctxTendencia = canvasTendencia.getContext('2d');
+  const historialData = stats.historial_reciente || [];
+  
+  // Agrupar por fecha
+  const diagnosticosPorFecha = {};
+  historialData.forEach(item => {
+    const fecha = new Date(item.timestamp).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    diagnosticosPorFecha[fecha] = (diagnosticosPorFecha[fecha] || 0) + 1;
+  });
+  
+  // Ordenar fechas cronológicamente
+  const fechasOrdenadas = Object.keys(diagnosticosPorFecha).sort((a, b) => {
+    const [diaA, mesA, anioA] = a.split('/');
+    const [diaB, mesB, anioB] = b.split('/');
+    return new Date(anioA, mesA - 1, diaA) - new Date(anioB, mesB - 1, diaB);
+  });
+  
+  // Tomar las últimas 10 fechas
+  const fechas = fechasOrdenadas.slice(-10);
+  const cantidades = fechas.map(fecha => diagnosticosPorFecha[fecha]);
+  
+  // Si no hay datos, mostrar un punto de ejemplo
+  if (fechas.length === 0) {
+    fechas.push('Sin datos');
+    cantidades.push(0);
+  }
+  
+  // Determinar el tipo de gráfico según la cantidad de datos
+  const tipoGrafico = fechas.length === 1 ? 'bar' : 'line';
+  
+  chartTendencia = new Chart(ctxTendencia, {
+    type: tipoGrafico,
+    data: {
+      labels: fechas,
+      datasets: [{
+        label: 'Diagnosticos',
+        data: cantidades,
+        borderColor: 'rgba(211, 47, 47, 1)',
+        backgroundColor: tipoGrafico === 'bar' ? 'rgba(211, 47, 47, 0.8)' : 'rgba(211, 47, 47, 0.1)',
+        tension: 0.3,
+        fill: true,
+        pointBackgroundColor: 'rgba(211, 47, 47, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 3,
+        pointRadius: 8,
+        pointHoverRadius: 10,
+        borderWidth: 3,
+        barThickness: 80
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'index',
+          intersect: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          },
+          grid: {
+            display: true,
+            color: 'rgba(0, 0, 0, 0.1)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false
+      }
+    }
+  });
 }
 
 // -----------------------------------------
@@ -457,6 +669,179 @@ function getNombreAmigable(nombreTecnico) {
     soldadora_miller_ranger: "Soldadora Miller Ranger 305D"
   };
   return nombres[nombreTecnico] || nombreTecnico;
+}
+
+// -----------------------------------------
+// EXPORTAR ESTADÍSTICAS A PDF
+// -----------------------------------------
+
+async function exportarEstadisticasAPDF() {
+  if (!estadisticasActuales) {
+    alert("No hay estadisticas disponibles. Por favor, actualiza primero.");
+    return;
+  }
+
+  if (typeof jspdf === 'undefined') {
+    alert("Cargando libreria PDF...");
+    return;
+  }
+
+  const { jsPDF } = jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+
+  // Título principal
+  doc.setFontSize(22);
+  doc.setTextColor(211, 47, 47);
+  doc.text("Big Tools - Reporte de Estadisticas", 20, y);
+  y += 5;
+
+  // Línea separadora
+  doc.setDrawColor(211, 47, 47);
+  doc.setLineWidth(0.5);
+  doc.line(20, y, 190, y);
+  y += 10;
+
+  // Fecha y hora del reporte
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  const fecha = new Date().toLocaleString('es-ES');
+  doc.text(`Generado: ${fecha}`, 20, y);
+  y += 10;
+
+  // Total de diagnósticos
+  doc.setFontSize(16);
+  doc.setTextColor(0, 0, 0);
+  doc.text("Resumen General", 20, y);
+  y += 8;
+
+  doc.setFontSize(12);
+  doc.text(`Total de Diagnosticos: ${estadisticasActuales.total_diagnosticos || 0}`, 20, y);
+  y += 12;
+
+  // Top Máquinas
+  doc.setFontSize(14);
+  doc.setTextColor(211, 47, 47);
+  doc.text("Maquinas Mas Consultadas", 20, y);
+  y += 8;
+
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  if (estadisticasActuales.top_maquinas && estadisticasActuales.top_maquinas.length > 0) {
+    estadisticasActuales.top_maquinas.forEach((item, index) => {
+      doc.text(`${index + 1}. ${item.maquina}: ${item.cantidad} consultas`, 25, y);
+      y += 6;
+    });
+  } else {
+    doc.text("No hay datos disponibles", 25, y);
+    y += 6;
+  }
+  y += 6;
+
+  // Top Categorías
+  doc.setFontSize(14);
+  doc.setTextColor(211, 47, 47);
+  doc.text("Categorias Mas Consultadas", 20, y);
+  y += 8;
+
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  if (estadisticasActuales.top_categorias && estadisticasActuales.top_categorias.length > 0) {
+    estadisticasActuales.top_categorias.forEach((item, index) => {
+      const categoriaTexto = `${index + 1}. ${item.categoria}: ${item.cantidad} consultas`;
+      const lineas = doc.splitTextToSize(categoriaTexto, 170);
+      lineas.forEach(linea => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(linea, 25, y);
+        y += 6;
+      });
+    });
+  } else {
+    doc.text("No hay datos disponibles", 25, y);
+    y += 6;
+  }
+  y += 6;
+
+  // Verificar si necesitamos nueva página para el historial
+  if (y > 200) {
+    doc.addPage();
+    y = 20;
+  }
+
+  // Historial Reciente
+  doc.setFontSize(14);
+  doc.setTextColor(211, 47, 47);
+  doc.text("Historial Reciente", 20, y);
+  y += 8;
+
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  
+  if (estadisticasActuales.historial_reciente && estadisticasActuales.historial_reciente.length > 0) {
+    // Encabezados de tabla
+    doc.setFont("helvetica", "bold");
+    doc.text("Fecha", 20, y);
+    doc.text("Maquina", 55, y);
+    doc.text("Categoria", 120, y);
+    y += 6;
+    doc.setFont("helvetica", "normal");
+
+    // Línea debajo de encabezados
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(20, y - 2, 190, y - 2);
+
+    // Filas de datos
+    estadisticasActuales.historial_reciente.slice(0, 20).forEach((item) => {
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+
+      const fechaObj = new Date(item.timestamp);
+      const fechaFormato = fechaObj.toLocaleDateString('es-ES', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      doc.text(fechaFormato, 20, y);
+      
+      const maquinaTexto = doc.splitTextToSize(item.maquina || "N/A", 60);
+      doc.text(maquinaTexto[0], 55, y);
+      
+      const categoriaTexto = doc.splitTextToSize(item.categoria || "N/A", 65);
+      doc.text(categoriaTexto[0], 120, y);
+      
+      y += 6;
+    });
+  } else {
+    doc.text("No hay historial disponible", 25, y);
+  }
+
+  // Pie de página
+  const totalPages = doc.internal.pages.length - 1;
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Pagina ${i} de ${totalPages}`, 170, 285);
+    doc.text("Big Tools - Sistema Experto de Diagnostico", 20, 285);
+  }
+
+  // Guardar el PDF
+  const nombreArchivo = `estadisticas_bigtools_${Date.now()}.pdf`;
+  doc.save(nombreArchivo);
+}
+
+// Event listener para el botón de exportar PDF
+if (exportPdfButton) {
+  exportPdfButton.addEventListener("click", exportarEstadisticasAPDF);
 }
 
 // -----------------------------------------

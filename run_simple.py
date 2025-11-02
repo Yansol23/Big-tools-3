@@ -67,10 +67,8 @@ def open_frontend():
     time.sleep(3)
     
     # Ruta al archivo index.html
-    frontend_path = Path(__file__).parent / "Frontend" / "index.html"
-    
-    # Abrir en el navegador
-    webbrowser.open(f"file://{frontend_path.absolute()}")
+    # Abrir en el navegador usando el servidor FastAPI
+    webbrowser.open("http://127.0.0.1:8000/")
     
     print("=" * 50)
     print("  Sistema iniciado correctamente!")
