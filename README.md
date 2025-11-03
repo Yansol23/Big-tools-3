@@ -2,6 +2,36 @@
 
 Sistema experto para diagnóstico de fallas en máquinas industriales con dashboard administrativo.
 
+## Requisitos Previos
+
+Antes de ejecutar el sistema, asegúrate de tener instalado:
+
+1. **Python 3.8 o superior**
+   - Descarga desde: https://www.python.org/downloads/
+   - Durante la instalación, marca la opción "Add Python to PATH"
+
+2. **Git** (opcional, solo si clonas desde GitHub)
+   - Descarga desde: https://git-scm.com/downloads
+
+## Instalación
+
+### Opción 1: Descargar desde GitHub
+
+```bash
+git clone https://github.com/Yansol23/Big-Tools-Sistema-Experto.git
+cd Big-Tools-Sistema-Experto
+```
+
+### Opción 2: Descargar desde Drive o ZIP
+
+1. Descarga la carpeta del proyecto
+2. Descomprime el archivo ZIP (si aplica)
+3. Abre PowerShell o Terminal
+4. Navega a la carpeta del proyecto:
+   ```bash
+   cd "ruta/donde/descargaste/Big-Tools-Sistema-Experto"
+   ```
+
 ## Inicio Rapido
 
 ### Pasos para Ejecutar el Sistema
@@ -10,6 +40,8 @@ Sistema experto para diagnóstico de fallas en máquinas industriales con dashbo
 ```bash
 pip install -r requirements.txt
 ```
+
+**Nota:** Si `pip` no funciona, intenta con `pip3` o `python -m pip install -r requirements.txt`
 
 #### 2. Navegar a la Carpeta Backend
 ```bash
@@ -193,20 +225,61 @@ Para agregar un manual:
 
 ## 🆘 Solución de Problemas
 
-**Backend no inicia:**
+### Error: "Python no reconocido como comando"
+**Solución:** Python no está en el PATH del sistema
+1. Reinstala Python desde https://www.python.org/downloads/
+2. Marca la opción "Add Python to PATH" durante la instalación
+3. Reinicia PowerShell/Terminal
+
+### Error: "pip no reconocido como comando"
+**Solución:** Usa una de estas alternativas:
 ```bash
-pip install -r requirements.txt
-cd Backend
-python -m uvicorn app:app --reload
+python -m pip install -r requirements.txt
+# o
+pip3 install -r requirements.txt
 ```
 
-**Frontend no conecta:**
-- Verifica que el backend esté en `http://127.0.0.1:8000`
+### Error: "No module named 'fastapi'"
+**Solución:** Las dependencias no están instaladas
+```bash
+pip install -r requirements.txt
+```
+
+### Backend no inicia
+**Solución:**
+```bash
+# Asegúrate de estar en la carpeta correcta
+cd Backend
+python -m uvicorn app:app --reload --host 127.0.0.1 --port 8000
+```
+
+### Frontend no conecta
+**Solución:**
+- Verifica que el backend esté corriendo en `http://127.0.0.1:8000`
+- Abre la consola del navegador (F12) para ver errores
+- Haz un hard refresh: `CTRL + SHIFT + R` o `CTRL + F5`
+
+### Login no funciona
+**Solución:**
+- Verifica las credenciales:
+  - Usuario: `admin` o `tecnico`
+  - Contraseña: `1234`
+- Haz un hard refresh del navegador
 - Revisa la consola del navegador (F12)
 
-**Login no funciona:**
-- Usuario: `admin`
-- Contraseña: `1234`
+### Puerto 8000 ya está en uso
+**Solución:**
+```bash
+# Usa otro puerto
+python -m uvicorn app:app --reload --host 127.0.0.1 --port 8001
+```
+Luego abre: `http://127.0.0.1:8001`
+
+### Los gráficos no se ven
+**Solución:**
+- Haz un hard refresh: `CTRL + SHIFT + R`
+- Verifica tu conexión a internet (Chart.js se carga desde CDN)
+- Revisa la consola del navegador (F12)
 
 ## 📝 Notas
 
