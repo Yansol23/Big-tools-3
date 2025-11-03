@@ -1,99 +1,30 @@
 {
-  "total_diagnosticos": 47,
+  "total_diagnosticos": 60,
   "diagnosticos_por_maquina": {
-    "generador_generac": 16,
-    "motor_cummins": 10,
-    "soldadora_miller_ranger": 8,
-    "hidrolavadora_karcher": 13
+    "generador_generac": 19,
+    "motor_cummins": 12,
+    "soldadora_miller_ranger": 10,
+    "hidrolavadora_karcher": 19
   },
   "diagnosticos_por_categoria": {
-    "generador_generac|Problemas con luces LED o alarmas": 12,
-    "motor_cummins|Problemas de sobrecalentamiento": 6,
+    "generador_generac|Problemas con luces LED o alarmas": 15,
+    "motor_cummins|Problemas de sobrecalentamiento": 8,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 2,
     "generador_generac|Problemas de arranque del motor": 1,
     "motor_cummins|Problemas de arranque": 2,
-    "soldadora_miller_ranger|Sin salida de soldadura": 3,
-    "hidrolavadora_karcher|Una luz parpadea": 5,
+    "soldadora_miller_ranger|Sin salida de soldadura": 4,
+    "hidrolavadora_karcher|Una luz parpadea": 6,
     "generador_generac|Otros problemas de funcionamiento": 3,
     "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 1,
     "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 4,
-    "soldadora_miller_ranger|Problemas de arranque del motor": 1,
+    "soldadora_miller_ranger|Problemas de arranque del motor": 2,
     "soldadora_miller_ranger|Calidad de soldadura deficiente": 1,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 3,
-    "hidrolavadora_karcher|El aparato no genera presión": 1,
-    "motor_cummins|Pérdida de potencia": 2
+    "hidrolavadora_karcher|El aparato no genera presión": 3,
+    "motor_cummins|Pérdida de potencia": 2,
+    "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
   },
   "historial": [
-    {
-      "timestamp": "2025-10-31T17:34:04.700864",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Fallo interno grave (Sobrevelocidad)"
-    },
-    {
-      "timestamp": "2025-10-31T17:42:40.932201",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de sobrecalentamiento",
-      "completado": true,
-      "falla": "Bomba de agua defectuosa"
-    },
-    {
-      "timestamp": "2025-10-31T17:46:46.575640",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Problemas con salida auxiliar (tomas de corriente)",
-      "completado": true,
-      "falla": "Sobrecarga o problema en regulador"
-    },
-    {
-      "timestamp": "2025-10-31T17:47:03.555137",
-      "maquina": "generador_generac",
-      "categoria": "Problemas de arranque del motor",
-      "completado": true,
-      "falla": "Fusible de 7.5 A quemado"
-    },
-    {
-      "timestamp": "2025-10-31T19:02:14.379297",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Fallo interno grave (Sobrevoltaje)"
-    },
-    {
-      "timestamp": "2025-10-31T19:08:26.240963",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de arranque",
-      "completado": true,
-      "falla": "Motor de arranque no funciona"
-    },
-    {
-      "timestamp": "2025-10-31T19:13:13.657296",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de arranque",
-      "completado": true,
-      "falla": "Presión baja de aceite o sensor defectuoso"
-    },
-    {
-      "timestamp": "2025-10-31T19:13:50.779575",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sin salida de soldadura",
-      "completado": true,
-      "falla": "Protección por sobrecarga activada"
-    },
-    {
-      "timestamp": "2025-10-31T19:14:58.157074",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "Una luz parpadea",
-      "completado": true,
-      "falla": "Interruptor de láminas flexibles pegado en dispositivo de seguridad contra funcionamiento en seco"
-    },
-    {
-      "timestamp": "2025-10-31T19:15:45.719674",
-      "maquina": "generador_generac",
-      "categoria": "Otros problemas de funcionamiento",
-      "completado": true,
-      "falla": "Botón defectuoso, cableado incorrecto o tarjeta de control defectuosa"
-    },
     {
       "timestamp": "2025-10-31T20:15:52.093008",
       "maquina": "motor_cummins",
@@ -352,6 +283,94 @@
       "categoria": "Una luz parpadea",
       "completado": true,
       "falla": "Polos del enchufe invertidos"
+    },
+    {
+      "timestamp": "2025-11-03T07:15:55.010766",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no funciona o no se pone en marcha",
+      "completado": false
+    },
+    {
+      "timestamp": "2025-11-03T07:16:23.227536",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no funciona o no se pone en marcha",
+      "completado": false
+    },
+    {
+      "timestamp": "2025-11-03T07:16:39.936912",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "Una luz parpadea",
+      "completado": true,
+      "falla": "Fuga en el sistema de alta presión"
+    },
+    {
+      "timestamp": "2025-11-03T07:31:20.977602",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no funciona o no se pone en marcha",
+      "completado": false
+    },
+    {
+      "timestamp": "2025-11-03T07:31:53.312080",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Cableado Incorrecto)"
+    },
+    {
+      "timestamp": "2025-11-03T07:36:03.961363",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no genera presión",
+      "completado": true,
+      "falla": "Aire en el sistema"
+    },
+    {
+      "timestamp": "2025-11-03T07:37:57.391465",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Sobrevelocidad)"
+    },
+    {
+      "timestamp": "2025-11-03T07:38:16.483645",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no genera presión",
+      "completado": true,
+      "falla": "Aire en el sistema"
+    },
+    {
+      "timestamp": "2025-11-03T07:38:32.791184",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Radiador obstruido"
+    },
+    {
+      "timestamp": "2025-11-03T07:38:50.692927",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Problemas de arranque del motor",
+      "completado": true,
+      "falla": "Bujía sucia, húmeda o con separación incorrecta"
+    },
+    {
+      "timestamp": "2025-11-03T07:49:36.455859",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Cableado Incorrecto)"
+    },
+    {
+      "timestamp": "2025-11-03T07:51:51.990974",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Radiador obstruido"
+    },
+    {
+      "timestamp": "2025-11-03T07:52:29.751028",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Sin salida de soldadura",
+      "completado": true,
+      "falla": "Cables de soldadura desconectados o dañados"
     }
   ]
 }

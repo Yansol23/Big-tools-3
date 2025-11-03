@@ -200,10 +200,10 @@ function crearBotonManual(maquina, referencia) {
   // Crear botón
   const btn = document.createElement("button");
   btn.classList.add("manual-btn");
-  btn.innerHTML = `📖 Ver Manual (${referencia})`;
+  btn.innerHTML = `Ver Manual (${referencia})`;
   btn.onclick = () => {
-    // Construir ruta relativa al PDF
-    const rutaPDF = `../Backend/data/manuales_pdf/${archivoPDF}`;
+    // Usar la ruta servida por FastAPI
+    const rutaPDF = `/manuales/${archivoPDF}`;
     window.open(rutaPDF, '_blank');
   };
 

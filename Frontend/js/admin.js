@@ -564,7 +564,7 @@ function cargarListaManuales() {
 }
 
 function abrirManual(nombreArchivo) {
-  const rutaPDF = `../Backend/data/manuales_pdf/${nombreArchivo}`;
+  const rutaPDF = `/manuales/${nombreArchivo}`;
   window.open(rutaPDF, "_blank");
 }
 

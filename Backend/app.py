@@ -28,6 +28,10 @@ app.include_router(router)
 frontend_path = Path(__file__).parent.parent / "Frontend"
 app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
 
+# Configurar archivos PDF
+manuales_path = Path(__file__).parent / "data" / "manuales_pdf"
+app.mount("/manuales", StaticFiles(directory=str(manuales_path)), name="manuales")
+
 @app.get("/")
 def root():
     """Redirige a la página principal del frontend"""
