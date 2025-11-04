@@ -1,14 +1,14 @@
 {
-  "total_diagnosticos": 60,
+  "total_diagnosticos": 63,
   "diagnosticos_por_maquina": {
-    "generador_generac": 19,
-    "motor_cummins": 12,
+    "generador_generac": 21,
+    "motor_cummins": 13,
     "soldadora_miller_ranger": 10,
     "hidrolavadora_karcher": 19
   },
   "diagnosticos_por_categoria": {
-    "generador_generac|Problemas con luces LED o alarmas": 15,
-    "motor_cummins|Problemas de sobrecalentamiento": 8,
+    "generador_generac|Problemas con luces LED o alarmas": 17,
+    "motor_cummins|Problemas de sobrecalentamiento": 9,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 2,
     "generador_generac|Problemas de arranque del motor": 1,
     "motor_cummins|Problemas de arranque": 2,
@@ -25,27 +25,6 @@
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
   },
   "historial": [
-    {
-      "timestamp": "2025-10-31T20:15:52.093008",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de sobrecalentamiento",
-      "completado": true,
-      "falla": "Ventilador o embrague de ventilador defectuoso"
-    },
-    {
-      "timestamp": "2025-10-31T20:32:51.994242",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sobrecalentamiento de la unidad",
-      "completado": true,
-      "falla": "Rejillas de ventilación obstruidas"
-    },
-    {
-      "timestamp": "2025-10-31T20:38:16.523324",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de sobrecalentamiento",
-      "completado": true,
-      "falla": "Bomba de agua defectuosa"
-    },
     {
       "timestamp": "2025-10-31T20:43:13.597747",
       "maquina": "hidrolavadora_karcher",
@@ -371,6 +350,27 @@
       "categoria": "Sin salida de soldadura",
       "completado": true,
       "falla": "Cables de soldadura desconectados o dañados"
+    },
+    {
+      "timestamp": "2025-11-03T09:47:20.726441",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Cableado Incorrecto)"
+    },
+    {
+      "timestamp": "2025-11-03T19:30:01.196115",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Baja Velocidad)"
+    },
+    {
+      "timestamp": "2025-11-03T21:16:38.570928",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Ventilador o embrague de ventilador defectuoso"
     }
   ]
 }

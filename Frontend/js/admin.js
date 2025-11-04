@@ -839,10 +839,125 @@ async function exportarEstadisticasAPDF() {
   doc.save(nombreArchivo);
 }
 
-// Event listener para el botón de exportar PDF
-if (exportPdfButton) {
-  exportPdfButton.addEventListener("click", exportarEstadisticasAPDF);
+// -----------------------------------------
+// EXPORTAR ESTADÍSTICAS A CSV
+// -----------------------------------------
+
+function exportarEstadisticasACSV() {
+  if (!estadisticasActuales) {
+    alert("No hay estadisticas disponibles. Por favor, actualiza primero.");
+    return;
+  }
+
+  try {
+    let csvContent = "";
+
+    // Encabezado del CSV
+    csvContent += "REPORTE DE ESTADISTICAS - BIG TOOLS\n";
+    csvContent += `Fecha de Generacion: ${new Date().toLocaleString('es-ES')}\n\n`;
+
+    // Total de diagnósticos
+    csvContent += "RESUMEN GENERAL\n";
+    csvContent += `Total de Diagnosticos,${estadisticasActuales.total_diagnosticos || 0}\n\n`;
+
+    // Top Máquinas
+    csvContent += "MAQUINAS MAS CONSULTADAS\n";
+    csvContent += "Posicion,Maquina,Cantidad de Consultas\n";
+    if (estadisticasActuales.top_maquinas && estadisticasActuales.top_maquinas.length > 0) {
+      estadisticasActuales.top_maquinas.forEach((item, index) => {
+        csvContent += `${index + 1},"${item.maquina}",${item.cantidad}\n`;
+      });
+    } else {
+      csvContent += "No hay datos disponibles\n";
+    }
+    csvContent += "\n";
+
+    // Top Categorías
+    csvContent += "CATEGORIAS MAS CONSULTADAS\n";
+    csvContent += "Posicion,Categoria,Cantidad de Consultas\n";
+    if (estadisticasActuales.top_categorias && estadisticasActuales.top_categorias.length > 0) {
+      estadisticasActuales.top_categorias.forEach((item, index) => {
+        csvContent += `${index + 1},"${item.categoria}",${item.cantidad}\n`;
+      });
+    } else {
+      csvContent += "No hay datos disponibles\n";
+    }
+    csvContent += "\n";
+
+    // Historial Reciente
+    csvContent += "HISTORIAL RECIENTE\n";
+    csvContent += "Fecha y Hora,Maquina,Categoria\n";
+    if (estadisticasActuales.historial_reciente && estadisticasActuales.historial_reciente.length > 0) {
+      estadisticasActuales.historial_reciente.forEach((item) => {
+        const fechaObj = new Date(item.timestamp);
+        const fechaFormato = fechaObj.toLocaleString('es-ES');
+        csvContent += `"${fechaFormato}","${item.maquina || 'N/A'}","${item.categoria || 'N/A'}"\n`;
+      });
+    } else {
+      csvContent += "No hay historial disponible\n";
+    }
+
+    // Crear archivo CSV y descargar
+    const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    const nombreArchivo = `estadisticas_bigtools_${Date.now()}.csv`;
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", nombreArchivo);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  } catch (error) {
+    alert("Error al exportar a CSV. Intenta de nuevo.");
+  }
 }
+
+// -----------------------------------------
+// TOOLTIP DE EXPORTACIÓN (PDF/CSV)
+// -----------------------------------------
+
+const exportButton = document.getElementById("export-button");
+const exportTooltip = document.getElementById("export-tooltip");
+const tooltipOptions = document.querySelectorAll(".tooltip-option");
+
+// Mostrar/ocultar tooltip al hacer clic en el botón
+if (exportButton && exportTooltip) {
+  exportButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    
+    if (!estadisticasActuales) {
+      alert("No hay estadisticas disponibles. Por favor, actualiza primero.");
+      return;
+    }
+    
+    exportTooltip.classList.toggle("show");
+  });
+
+  // Cerrar tooltip al hacer clic fuera
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".export-wrapper")) {
+      exportTooltip.classList.remove("show");
+    }
+  });
+}
+
+// Manejar las opciones del tooltip
+tooltipOptions.forEach(option => {
+  option.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const formato = option.getAttribute("data-format");
+    exportTooltip.classList.remove("show");
+
+    if (formato === "pdf") {
+      exportarEstadisticasAPDF();
+    } else if (formato === "csv") {
+      exportarEstadisticasACSV();
+    }
+  });
+});
 
 // -----------------------------------------
 // INICIALIZACIÓN

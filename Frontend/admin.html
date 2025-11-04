@@ -116,7 +116,13 @@
             <!-- Botones de acción -->
             <div class="refresh-container">
                 <button id="refresh-button" class="refresh-btn">Actualizar Estadísticas</button>
-                <button id="export-pdf-button" class="export-pdf-btn">Exportar Estadisticas a PDF</button>
+                <div class="export-wrapper">
+                    <button id="export-button" class="export-btn">Exportar Estadisticas</button>
+                    <div id="export-tooltip" class="export-tooltip">
+                        <button class="tooltip-option" data-format="pdf">PDF</button>
+                        <button class="tooltip-option" data-format="csv">CSV</button>
+                    </div>
+                </div>
             </div>
             </div>
 
