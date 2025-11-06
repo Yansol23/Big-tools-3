@@ -12,15 +12,30 @@
 </head>
 
 <body>
+    <!-- Canvas para partículas de fondo -->
+    <canvas id="particles-canvas"></canvas>
+
     <!-- Modal de Login -->
     <div id="login-modal" class="modal">
         <div class="modal-content">
+            <div class="logo-container">
+                <img src="/static/assets/img/logo_bigtools.png" alt="Big Tools" class="login-logo">
+            </div>
             <h2>Iniciar Sesión</h2>
             <p>Por favor, ingresa tus credenciales para acceder al sistema</p>
             <form id="login-form">
-                <input type="text" id="username" placeholder="Usuario" required autocomplete="username">
-                <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password">
-                <button type="submit">Ingresar</button>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Usuario" required autocomplete="username">
+                    <span class="input-highlight"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password">
+                    <span class="input-highlight"></span>
+                </div>
+                <button type="submit" class="login-btn">
+                    <span>Ingresar</span>
+                    <div class="btn-shine"></div>
+                </button>
             </form>
             <p id="login-error" class="error-msg"></p>
         </div>

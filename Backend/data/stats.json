@@ -1,14 +1,14 @@
 {
-  "total_diagnosticos": 76,
+  "total_diagnosticos": 79,
   "diagnosticos_por_maquina": {
-    "generador_generac": 24,
-    "motor_cummins": 19,
+    "generador_generac": 25,
+    "motor_cummins": 21,
     "soldadora_miller_ranger": 13,
     "hidrolavadora_karcher": 20
   },
   "diagnosticos_por_categoria": {
-    "generador_generac|Problemas con luces LED o alarmas": 19,
-    "motor_cummins|Problemas de sobrecalentamiento": 12,
+    "generador_generac|Problemas con luces LED o alarmas": 20,
+    "motor_cummins|Problemas de sobrecalentamiento": 14,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 5,
     "generador_generac|Problemas de arranque del motor": 1,
     "motor_cummins|Problemas de arranque": 2,
@@ -25,27 +25,6 @@
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
   },
   "historial": [
-    {
-      "timestamp": "2025-11-02T19:19:18.840035",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "Una luz está encendida (fija)",
-      "completado": true,
-      "falla": "El recipiente de producto de mantenimiento está vacío"
-    },
-    {
-      "timestamp": "2025-11-02T19:19:30.286081",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "El quemador no se enciende (el agua no calienta)",
-      "completado": true,
-      "falla": "El filtro de combustible está sucio"
-    },
-    {
-      "timestamp": "2025-11-02T19:21:47.116300",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "El aparato no genera presión",
-      "completado": true,
-      "falla": "Cantidad de abastecimiento de agua escasa"
-    },
     {
       "timestamp": "2025-11-02T19:21:55.311180",
       "maquina": "hidrolavadora_karcher",
@@ -371,6 +350,27 @@
       "categoria": "Pérdida de potencia",
       "completado": true,
       "falla": "Problema en sistema de control electrónico"
+    },
+    {
+      "timestamp": "2025-11-06T15:05:40.147751",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Sobrevoltaje)"
+    },
+    {
+      "timestamp": "2025-11-06T15:06:53.649281",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Ventilador o embrague de ventilador defectuoso"
+    },
+    {
+      "timestamp": "2025-11-06T15:12:08.212248",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Ventilador o embrague de ventilador defectuoso"
     }
   ]
 }
