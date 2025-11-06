@@ -1,8 +1,8 @@
 {
-  "total_diagnosticos": 83,
+  "total_diagnosticos": 84,
   "diagnosticos_por_maquina": {
     "generador_generac": 26,
-    "motor_cummins": 23,
+    "motor_cummins": 24,
     "soldadora_miller_ranger": 14,
     "hidrolavadora_karcher": 20
   },
@@ -21,17 +21,10 @@
     "soldadora_miller_ranger|Calidad de soldadura deficiente": 1,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 3,
     "hidrolavadora_karcher|El aparato no genera presión": 3,
-    "motor_cummins|Pérdida de potencia": 7,
+    "motor_cummins|Pérdida de potencia": 8,
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
   },
   "historial": [
-    {
-      "timestamp": "2025-11-02T19:25:12.661950",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "Una luz parpadea",
-      "completado": true,
-      "falla": "Polos del enchufe invertidos"
-    },
     {
       "timestamp": "2025-11-02T19:25:21.796742",
       "maquina": "soldadora_miller_ranger",
@@ -371,6 +364,13 @@
       "categoria": "Sin salida de soldadura",
       "completado": true,
       "falla": "Problema en generador de soldadura"
+    },
+    {
+      "timestamp": "2025-11-06T16:00:46.654252",
+      "maquina": "motor_cummins",
+      "categoria": "Pérdida de potencia",
+      "completado": true,
+      "falla": "Problema en sistema de control electrónico"
     }
   ]
 }
