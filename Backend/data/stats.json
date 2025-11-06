@@ -1,8 +1,8 @@
 {
-  "total_diagnosticos": 84,
+  "total_diagnosticos": 86,
   "diagnosticos_por_maquina": {
     "generador_generac": 26,
-    "motor_cummins": 24,
+    "motor_cummins": 26,
     "soldadora_miller_ranger": 14,
     "hidrolavadora_karcher": 20
   },
@@ -21,24 +21,10 @@
     "soldadora_miller_ranger|Calidad de soldadura deficiente": 1,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 3,
     "hidrolavadora_karcher|El aparato no genera presión": 3,
-    "motor_cummins|Pérdida de potencia": 8,
+    "motor_cummins|Pérdida de potencia": 10,
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
   },
   "historial": [
-    {
-      "timestamp": "2025-11-02T19:25:21.796742",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sin salida de soldadura",
-      "completado": true,
-      "falla": "Protección por sobrecarga activada"
-    },
-    {
-      "timestamp": "2025-11-02T19:29:25.216062",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Mantenimiento programado requerido (A)"
-    },
     {
       "timestamp": "2025-11-02T19:34:19.444566",
       "maquina": "generador_generac",
@@ -367,6 +353,20 @@
     },
     {
       "timestamp": "2025-11-06T16:00:46.654252",
+      "maquina": "motor_cummins",
+      "categoria": "Pérdida de potencia",
+      "completado": true,
+      "falla": "Problema en sistema de control electrónico"
+    },
+    {
+      "timestamp": "2025-11-06T17:27:56.339515",
+      "maquina": "motor_cummins",
+      "categoria": "Pérdida de potencia",
+      "completado": true,
+      "falla": "Problema en sistema de control electrónico"
+    },
+    {
+      "timestamp": "2025-11-06T17:59:37.024424",
       "maquina": "motor_cummins",
       "categoria": "Pérdida de potencia",
       "completado": true,
