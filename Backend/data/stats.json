@@ -1,8 +1,8 @@
 {
-  "total_diagnosticos": 86,
+  "total_diagnosticos": 87,
   "diagnosticos_por_maquina": {
     "generador_generac": 26,
-    "motor_cummins": 26,
+    "motor_cummins": 27,
     "soldadora_miller_ranger": 14,
     "hidrolavadora_karcher": 20
   },
@@ -22,16 +22,10 @@
     "hidrolavadora_karcher|Una luz está encendida (fija)": 3,
     "hidrolavadora_karcher|El aparato no genera presión": 3,
     "motor_cummins|Pérdida de potencia": 10,
-    "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3
+    "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3,
+    "motor_cummins|Humo excesivo": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-02T19:34:19.444566",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Fallo interno grave (Bajo Voltaje)"
-    },
     {
       "timestamp": "2025-11-02T19:34:26.653963",
       "maquina": "hidrolavadora_karcher",
@@ -371,6 +365,13 @@
       "categoria": "Pérdida de potencia",
       "completado": true,
       "falla": "Problema en sistema de control electrónico"
+    },
+    {
+      "timestamp": "2025-11-06T18:06:25.032496",
+      "maquina": "motor_cummins",
+      "categoria": "Humo excesivo",
+      "completado": true,
+      "falla": "Combustible sin quemar o agua en combustión"
     }
   ]
 }
