@@ -329,7 +329,7 @@ body {
 }
 
 .chat-window {
-    height: 500px;
+    height: 700px;
     padding: 15px;
     overflow-y: auto;
     display: flex;
