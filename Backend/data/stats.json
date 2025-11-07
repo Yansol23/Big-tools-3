@@ -1,13 +1,13 @@
 {
-  "total_diagnosticos": 102,
+  "total_diagnosticos": 103,
   "diagnosticos_por_maquina": {
-    "generador_generac": 31,
+    "generador_generac": 32,
     "motor_cummins": 33,
     "soldadora_miller_ranger": 17,
     "hidrolavadora_karcher": 21
   },
   "diagnosticos_por_categoria": {
-    "generador_generac|Problemas con luces LED o alarmas": 25,
+    "generador_generac|Problemas con luces LED o alarmas": 26,
     "motor_cummins|Problemas de sobrecalentamiento": 20,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 5,
     "generador_generac|Problemas de arranque del motor": 2,
@@ -27,13 +27,6 @@
     "soldadora_miller_ranger|Motor funciona irregular o se apaga": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-03T07:36:03.961363",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "El aparato no genera presión",
-      "completado": true,
-      "falla": "Aire en el sistema"
-    },
     {
       "timestamp": "2025-11-03T07:37:57.391465",
       "maquina": "generador_generac",
@@ -376,6 +369,13 @@
       "categoria": "Problemas de sobrecalentamiento",
       "completado": true,
       "falla": "Nivel insuficiente de refrigerante"
+    },
+    {
+      "timestamp": "2025-11-07T10:37:03.416851",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Fallo interno grave (Sobrevoltaje)"
     }
   ]
 }
