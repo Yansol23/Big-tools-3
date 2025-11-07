@@ -688,118 +688,192 @@ async function exportarEstadisticasAPDF() {
 
   const { jsPDF } = jspdf;
   const doc = new jsPDF();
-  let y = 20;
-
-  // Título principal
+  
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  
+  // Función auxiliar para agregar pie de página
+  function agregarPieDePagina(pageNum, totalPages) {
+    const footerY = pageHeight - 15;
+    doc.setDrawColor(211, 47, 47);
+    doc.setLineWidth(0.5);
+    doc.line(20, footerY - 5, pageWidth - 20, footerY - 5);
+    
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont("helvetica", "italic");
+    doc.text("Big Tools - Sistema Experto de Diagnóstico", 25, footerY);
+    doc.text(`Página ${pageNum} de ${totalPages}`, pageWidth - 25, footerY, { align: 'right' });
+  }
+  
+  // Obtener usuario actual
+  const usuarioActual = localStorage.getItem('chatbot_username') || 'admin';
+  
+  // ========== ENCABEZADO MODERNO ==========
+  doc.setFillColor(52, 73, 94);
+  doc.rect(0, 0, pageWidth, 35, 'F');
+  
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(22);
-  doc.setTextColor(211, 47, 47);
-  doc.text("Big Tools - Reporte de Estadisticas", 20, y);
-  y += 5;
-
-  // Línea separadora
-  doc.setDrawColor(211, 47, 47);
-  doc.setLineWidth(0.5);
-  doc.line(20, y, 190, y);
-  y += 10;
-
-  // Fecha y hora del reporte
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  const fecha = new Date().toLocaleString('es-ES');
-  doc.text(`Generado: ${fecha}`, 20, y);
-  y += 10;
-
-  // Total de diagnósticos
-  doc.setFontSize(16);
-  doc.setTextColor(0, 0, 0);
-  doc.text("Resumen General", 20, y);
-  y += 8;
-
+  doc.setFont("helvetica", "bold");
+  doc.text("BIG TOOLS", pageWidth / 2, 15, { align: 'center' });
+  
   doc.setFontSize(12);
-  doc.text(`Total de Diagnosticos: ${estadisticasActuales.total_diagnosticos || 0}`, 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text("Reporte de Estadísticas del Sistema", pageWidth / 2, 25, { align: 'center' });
+  
+  doc.setDrawColor(211, 47, 47);
+  doc.setLineWidth(1);
+  doc.line(33, 30, pageWidth - 33, 30);
+  
+  let y = 40;
+
+  // Fecha y usuario en el encabezado
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.setFont("helvetica", "normal");
+  const now = new Date();
+  const fecha = `${now.getDate()} de ${now.toLocaleString('es-ES', { month: 'long' })} de ${now.getFullYear()}, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  doc.text(`Fecha de generación: ${fecha}`, 25, y);
+  doc.text(`Usuario: ${usuarioActual}`, pageWidth - 25, y, { align: 'right' });
+  
+  y = 55;
+
+  // ========== RESUMEN GENERAL ==========
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("RESUMEN GENERAL", 25, y + 5.5);
+  
+  y += 15;
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text(`Total de Diagnósticos: ${estadisticasActuales.total_diagnosticos || 0}`, 25, y);
   y += 12;
 
-  // Top Máquinas
-  doc.setFontSize(14);
-  doc.setTextColor(211, 47, 47);
-  doc.text("Maquinas Mas Consultadas", 20, y);
-  y += 8;
-
+  // ========== MÁQUINAS MÁS CONSULTADAS ==========
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("MÁQUINAS MÁS CONSULTADAS", 25, y + 5.5);
+  
+  y += 15;
   doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  
   if (estadisticasActuales.top_maquinas && estadisticasActuales.top_maquinas.length > 0) {
     estadisticasActuales.top_maquinas.forEach((item, index) => {
-      doc.text(`${index + 1}. ${item.maquina}: ${item.cantidad} consultas`, 25, y);
+      if (y > pageHeight - 30) {
+        doc.addPage();
+        y = 45;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.text(`${index + 1}.`, 25, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${item.maquina}:`, 32, y);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(211, 47, 47);
+      doc.text(`${item.cantidad} consultas`, 140, y);
+      doc.setTextColor(0, 0, 0);
       y += 6;
     });
   } else {
     doc.text("No hay datos disponibles", 25, y);
     y += 6;
   }
-  y += 6;
-
-  // Top Categorías
-  doc.setFontSize(14);
-  doc.setTextColor(211, 47, 47);
-  doc.text("Categorias Mas Consultadas", 20, y);
   y += 8;
 
+  // ========== CATEGORÍAS MÁS CONSULTADAS ==========
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("CATEGORÍAS MÁS CONSULTADAS", 25, y + 5.5);
+  
+  y += 15;
   doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  
   if (estadisticasActuales.top_categorias && estadisticasActuales.top_categorias.length > 0) {
     estadisticasActuales.top_categorias.forEach((item, index) => {
-      const categoriaTexto = `${index + 1}. ${item.categoria}: ${item.cantidad} consultas`;
-      const lineas = doc.splitTextToSize(categoriaTexto, 170);
-      lineas.forEach(linea => {
-        if (y > 270) {
-          doc.addPage();
-          y = 20;
-        }
-        doc.text(linea, 25, y);
-        y += 6;
-      });
+      if (y > pageHeight - 30) {
+        doc.addPage();
+        y = 45;
+      }
+      const categoriaTexto = `${index + 1}. ${item.categoria}:`;
+      const lineas = doc.splitTextToSize(categoriaTexto, pageWidth - 100);
+      doc.setFont("helvetica", "normal");
+      doc.text(lineas[0], 25, y);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(211, 47, 47);
+      doc.text(`${item.cantidad} consultas`, 140, y);
+      doc.setTextColor(0, 0, 0);
+      y += 6;
     });
   } else {
     doc.text("No hay datos disponibles", 25, y);
     y += 6;
   }
-  y += 6;
-
-  // Verificar si necesitamos nueva página para el historial
-  if (y > 200) {
-    doc.addPage();
-    y = 20;
-  }
-
-  // Historial Reciente
-  doc.setFontSize(14);
-  doc.setTextColor(211, 47, 47);
-  doc.text("Historial Reciente", 20, y);
   y += 8;
 
-  doc.setFontSize(9);
+  // Verificar si necesitamos nueva página para el historial
+  if (y > pageHeight - 80) {
+    doc.addPage();
+    y = 45;
+  }
+
+  // ========== HISTORIAL RECIENTE ==========
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("HISTORIAL RECIENTE (ÚLTIMOS 20 REGISTROS)", 25, y + 5.5);
+  
+  y += 15;
   doc.setTextColor(0, 0, 0);
+  doc.setFontSize(9);
   
   if (estadisticasActuales.historial_reciente && estadisticasActuales.historial_reciente.length > 0) {
-    // Encabezados de tabla
+    // Encabezados de tabla con fondo gris
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, y - 4, pageWidth - 40, 7, 'F');
+    
     doc.setFont("helvetica", "bold");
-    doc.text("Fecha", 20, y);
-    doc.text("Maquina", 55, y);
-    doc.text("Categoria", 120, y);
-    y += 6;
+    doc.setTextColor(0, 0, 0);
+    doc.text("Fecha", 25, y);
+    doc.text("Máquina", 65, y);
+    doc.text("Categoría", 130, y);
+    y += 8;
     doc.setFont("helvetica", "normal");
 
     // Línea debajo de encabezados
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(20, y - 2, 190, y - 2);
+    doc.setDrawColor(211, 47, 47);
+    doc.setLineWidth(0.5);
+    doc.line(20, y - 3, pageWidth - 20, y - 3);
 
-    // Filas de datos
+    // Filas de datos con líneas alternas
+    let isAlternate = false;
     estadisticasActuales.historial_reciente.slice(0, 20).forEach((item) => {
-      if (y > 270) {
+      if (y > pageHeight - 30) {
         doc.addPage();
-        y = 20;
+        y = 45;
       }
+
+      // Fondo alternado
+      if (isAlternate) {
+        doc.setFillColor(250, 250, 250);
+        doc.rect(20, y - 4, pageWidth - 40, 6, 'F');
+      }
+      isAlternate = !isAlternate;
 
       const fechaObj = new Date(item.timestamp);
       const fechaFormato = fechaObj.toLocaleDateString('es-ES', { 
@@ -810,13 +884,14 @@ async function exportarEstadisticasAPDF() {
         minute: '2-digit'
       });
 
-      doc.text(fechaFormato, 20, y);
+      doc.setTextColor(0, 0, 0);
+      doc.text(fechaFormato, 25, y);
       
       const maquinaTexto = doc.splitTextToSize(item.maquina || "N/A", 60);
-      doc.text(maquinaTexto[0], 55, y);
+      doc.text(maquinaTexto[0], 65, y);
       
-      const categoriaTexto = doc.splitTextToSize(item.categoria || "N/A", 65);
-      doc.text(categoriaTexto[0], 120, y);
+      const categoriaTexto = doc.splitTextToSize(item.categoria || "N/A", 55);
+      doc.text(categoriaTexto[0], 130, y);
       
       y += 6;
     });
@@ -824,18 +899,16 @@ async function exportarEstadisticasAPDF() {
     doc.text("No hay historial disponible", 25, y);
   }
 
-  // Pie de página
+  // Agregar pie de página a todas las páginas
   const totalPages = doc.internal.pages.length - 1;
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text(`Pagina ${i} de ${totalPages}`, 170, 285);
-    doc.text("Big Tools - Sistema Experto de Diagnostico", 20, 285);
+    agregarPieDePagina(i, totalPages);
   }
 
   // Guardar el PDF
-  const nombreArchivo = `estadisticas_bigtools_${Date.now()}.pdf`;
+  const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const nombreArchivo = `BigTools_Estadisticas_${timestamp}.pdf`;
   doc.save(nombreArchivo);
 }
 

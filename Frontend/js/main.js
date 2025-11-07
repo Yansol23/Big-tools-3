@@ -334,76 +334,149 @@ function exportarDiagnosticoAPDF(data) {
   const { jsPDF } = jspdf;
   const doc = new jsPDF();
   
-  // Configurar el documento
-  doc.setFont("helvetica");
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   
-  // Título
-  doc.setFontSize(20);
-  doc.setTextColor(211, 47, 47);
-  doc.text("Big Tools - Diagnostico", 20, 20);
+  // ========== ENCABEZADO MODERNO ==========
+  // Fondo del encabezado (azul oscuro)
+  doc.setFillColor(52, 73, 94);
+  doc.rect(0, 0, pageWidth, 35, 'F');
   
-  // Línea separadora
-  doc.setDrawColor(211, 47, 47);
-  doc.setLineWidth(0.5);
-  doc.line(20, 25, 190, 25);
+  // Título en blanco
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("BIG TOOLS", pageWidth / 2, 15, { align: 'center' });
   
-  // Información del diagnóstico
   doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "normal");
+  doc.text("Informe de Diagnóstico Técnico", pageWidth / 2, 25, { align: 'center' });
   
-  let y = 35;
+  // Línea decorativa roja
+  doc.setDrawColor(211, 47, 47);
+  doc.setLineWidth(1);
+  doc.line(33, 30, pageWidth - 33, 30);
+  
+  let y = 40;
+  
+  // Fecha de generación
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.setFont("helvetica", "normal");
+  const fechaHeader = new Date();
+  const fechaTexto = `${fechaHeader.getDate()} de ${fechaHeader.toLocaleString('es-ES', { month: 'long' })} de ${fechaHeader.getFullYear()}, ${fechaHeader.getHours().toString().padStart(2, '0')}:${fechaHeader.getMinutes().toString().padStart(2, '0')}`;
+  doc.text(`Fecha de generación: ${fechaTexto}`, 25, y);
+  
+  // Usuario
+  if (sessionState.username) {
+    doc.text(`Usuario: ${sessionState.username}`, pageWidth - 25, y, { align: 'right' });
+  }
+  
+  y = 50;
+  
+  // ========== INFORMACIÓN DEL EQUIPO ==========
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("INFORMACIÓN DEL EQUIPO", 25, y + 5.5);
+  
+  y += 15;
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
   
   if (data.maquina) {
     doc.setFont("helvetica", "bold");
-    doc.text("Maquina:", 20, y);
+    doc.text("Máquina:", 25, y);
     doc.setFont("helvetica", "normal");
-    doc.text(data.maquina, 50, y);
-    y += 10;
+    doc.text(data.maquina, 70, y);
+    y += 7;
   }
   
   if (data.categoria) {
     doc.setFont("helvetica", "bold");
-    doc.text("Categoria:", 20, y);
+    doc.text("Categoría:", 25, y);
+    y += 7;
     doc.setFont("helvetica", "normal");
-    doc.text(data.categoria, 50, y);
-    y += 10;
+    const categoriaLines = doc.splitTextToSize(data.categoria, pageWidth - 55);
+    doc.text(categoriaLines, 25, y);
+    y += (categoriaLines.length * 6) + 5;
   }
+  
+  // ========== DIAGNÓSTICO ==========
+  y += 5;
+  doc.setFillColor(211, 47, 47);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("DIAGNÓSTICO", 25, y + 5.5);
+  
+  y += 15;
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
   
   if (data.falla) {
-    doc.setFont("helvetica", "bold");
-    doc.text("Falla Detectada:", 20, y);
-    y += 7;
+    // Caja con borde rojo para la falla
+    const fallaLines = doc.splitTextToSize(data.falla, pageWidth - 60);
+    const boxHeight = (fallaLines.length * 6) + 10;
+    
+    doc.setDrawColor(211, 47, 47);
+    doc.setLineWidth(0.5);
+    doc.setFillColor(255, 240, 240);
+    doc.rect(25, y - 3, pageWidth - 50, boxHeight, 'FD');
+    
     doc.setFont("helvetica", "normal");
-    const fallaLines = doc.splitTextToSize(data.falla, 170);
-    doc.text(fallaLines, 20, y);
-    y += (fallaLines.length * 7) + 5;
+    doc.text(fallaLines, 30, y + 3);
+    y += boxHeight + 10;
   }
+  
+  // ========== SOLUCIÓN RECOMENDADA ==========
+  doc.setFillColor(46, 125, 50);
+  doc.rect(20, y, pageWidth - 40, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("SOLUCIÓN RECOMENDADA", 25, y + 5.5);
+  
+  y += 15;
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
   
   if (data.solucion) {
-    doc.setFont("helvetica", "bold");
-    doc.text("Solucion:", 20, y);
-    y += 7;
+    // Caja con borde verde para la solución
+    const solucionLines = doc.splitTextToSize(data.solucion, pageWidth - 60);
+    const boxHeight = (solucionLines.length * 6) + 10;
+    
+    doc.setDrawColor(46, 125, 50);
+    doc.setLineWidth(0.5);
+    doc.setFillColor(240, 255, 240);
+    doc.rect(25, y - 3, pageWidth - 50, boxHeight, 'FD');
+    
     doc.setFont("helvetica", "normal");
-    const solucionLines = doc.splitTextToSize(data.solucion, 170);
-    doc.text(solucionLines, 20, y);
-    y += (solucionLines.length * 7) + 5;
+    doc.text(solucionLines, 30, y + 3);
+    y += boxHeight + 10;
   }
   
-  // Fecha y hora
-  y += 10;
-  doc.setFontSize(10);
+  // ========== PIE DE PÁGINA ==========
+  const footerY = pageHeight - 15;
+  
+  // Línea superior del pie
+  doc.setDrawColor(211, 47, 47);
+  doc.setLineWidth(0.5);
+  doc.line(20, footerY - 5, pageWidth - 20, footerY - 5);
+  
+  // Información del pie
+  doc.setFontSize(8);
   doc.setTextColor(100, 100, 100);
-  const fecha = new Date().toLocaleString('es-ES');
-  doc.text(`Generado: ${fecha}`, 20, y);
-  
-  // Usuario
-  if (sessionState.username) {
-    y += 5;
-    doc.text(`Usuario: ${sessionState.username}`, 20, y);
-  }
+  doc.setFont("helvetica", "italic");
+  doc.text("Big Tools - Sistema Experto de Diagnóstico", 25, footerY);
+  doc.text("Página 1 de 1", pageWidth - 25, footerY, { align: 'right' });
   
   // Guardar el PDF
-  const nombreArchivo = `diagnostico_${data.maquina}_${Date.now()}.pdf`;
+  const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const nombreArchivo = `BigTools_Diagnostico_${timestamp}.pdf`;
   doc.save(nombreArchivo);
 }
 
