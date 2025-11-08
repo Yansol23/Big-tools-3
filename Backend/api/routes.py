@@ -1,7 +1,10 @@
 """Rutas de la API del sistema experto"""
 
-from fastapi import APIRouter, HTTPException, Body, Header
+from fastapi import APIRouter, HTTPException, Body, Header, UploadFile, File, Form
 from typing import Optional
+import os
+import json
+from pathlib import Path
 from api.auth import validar_usuario, crear_token, validar_token, eliminar_token
 from api.base_conocimiento import BaseConocimiento
 from api.engine import MotorInferencia
@@ -164,3 +167,139 @@ def avanzar_diagnostico(nombre_maquina: str, categoria: str, respuesta: str = Bo
         stats_manager.registrar_diagnostico_completado(nombre_tecnico, categoria, resultado["falla"])
     
     return resultado
+
+
+# ========== GESTIÓN DE MANUALES ==========
+
+MANUALES_DIR = Path(__file__).parent.parent / "data" / "manuales_pdf"
+MANUALES_JSON = Path(__file__).parent.parent / "data" / "manuales.json"
+
+# Crear directorio si no existe
+MANUALES_DIR.mkdir(parents=True, exist_ok=True)
+
+# Crear archivo JSON si no existe
+if not MANUALES_JSON.exists():
+    with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
+        json.dump([], f, ensure_ascii=False, indent=2)
+
+
+@router.get("/admin/manuales")
+def listar_manuales(authorization: Optional[str] = Header(None)):
+    """Obtener lista de manuales disponibles."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Token no proporcionado")
+    
+    token = authorization.replace("Bearer ", "")
+    usuario = validar_token(token)
+    
+    if not usuario or usuario.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Acceso denegado. Solo administradores.")
+    
+    try:
+        with open(MANUALES_JSON, 'r', encoding='utf-8') as f:
+            manuales = json.load(f)
+        return {"manuales": manuales}
+    except Exception as e:
+        return {"manuales": []}
+
+
+@router.post("/admin/manuales/upload")
+async def subir_manual(
+    nombreManual: str = Form(...),
+    archivo: UploadFile = File(...),
+    authorization: Optional[str] = Header(None)
+):
+    """Subir un nuevo manual PDF."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Token no proporcionado")
+    
+    token = authorization.replace("Bearer ", "")
+    usuario = validar_token(token)
+    
+    if not usuario or usuario.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Acceso denegado. Solo administradores.")
+    
+    # Validar que sea un PDF
+    if not archivo.filename.endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="Solo se permiten archivos PDF")
+    
+    try:
+        # Generar nombre de archivo seguro
+        nombre_archivo = f"{nombreManual.replace(' ', '_')}.pdf"
+        ruta_archivo = MANUALES_DIR / nombre_archivo
+        
+        # Guardar el archivo
+        contenido = await archivo.read()
+        with open(ruta_archivo, 'wb') as f:
+            f.write(contenido)
+        
+        # Actualizar el JSON de manuales
+        with open(MANUALES_JSON, 'r', encoding='utf-8') as f:
+            manuales = json.load(f)
+        
+        # Agregar nuevo manual si no existe
+        nuevo_manual = {
+            "nombre": nombreManual,
+            "archivo": nombre_archivo,
+            "fecha_subida": str(Path(ruta_archivo).stat().st_mtime)
+        }
+        
+        # Verificar si ya existe y actualizar
+        existe = False
+        for i, manual in enumerate(manuales):
+            if manual["nombre"] == nombreManual:
+                manuales[i] = nuevo_manual
+                existe = True
+                break
+        
+        if not existe:
+            manuales.append(nuevo_manual)
+        
+        # Guardar JSON actualizado
+        with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
+            json.dump(manuales, f, ensure_ascii=False, indent=2)
+        
+        return {
+            "success": True,
+            "message": f"Manual '{nombreManual}' subido correctamente",
+            "manual": nuevo_manual
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al subir el manual: {str(e)}")
+
+
+@router.delete("/admin/manuales/{nombre_archivo}")
+def eliminar_manual(
+    nombre_archivo: str,
+    authorization: Optional[str] = Header(None)
+):
+    """Eliminar un manual."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Token no proporcionado")
+    
+    token = authorization.replace("Bearer ", "")
+    usuario = validar_token(token)
+    
+    if not usuario or usuario.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Acceso denegado. Solo administradores.")
+    
+    try:
+        # Eliminar archivo físico
+        ruta_archivo = MANUALES_DIR / nombre_archivo
+        if ruta_archivo.exists():
+            ruta_archivo.unlink()
+        
+        # Actualizar JSON
+        with open(MANUALES_JSON, 'r', encoding='utf-8') as f:
+            manuales = json.load(f)
+        
+        manuales = [m for m in manuales if m["archivo"] != nombre_archivo]
+        
+        with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
+            json.dump(manuales, f, ensure_ascii=False, indent=2)
+        
+        return {"success": True, "message": "Manual eliminado correctamente"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al eliminar el manual: {str(e)}")

@@ -505,62 +505,61 @@ function inicializarPestanas() {
 // GESTIÓN DE MANUALES
 // -----------------------------------------
 
-function cargarListaManuales() {
+async function cargarListaManuales() {
   const manualesLista = document.getElementById("manuales-lista");
   
-  // Manuales actuales (simulado - en producción vendría del backend)
-  const manuales = [
-    {
-      nombre: "HIDROLAVADORA.pdf",
-      maquina: "Hidrolavadora Kärcher",
-      tamano: "2.5 MB",
-      fecha: "2024-01-15"
-    },
-    {
-      nombre: "Generac_Manual_Usuario_Guardian_Series (1).pdf",
-      maquina: "Generador Generac Guardian",
-      tamano: "8.3 MB",
-      fecha: "2024-01-10"
-    },
-    {
-      nombre: "MANUAL CUMMINS 2.pdf",
-      maquina: "Motor Cummins",
-      tamano: "15.7 MB",
-      fecha: "2024-01-05"
-    },
-    {
-      nombre: "ranger_305d.pdf",
-      maquina: "Soldadora Miller Ranger 305D",
-      tamano: "4.2 MB",
-      fecha: "2024-01-01"
+  console.log("Cargando lista de manuales...");
+  
+  try {
+    const token = localStorage.getItem("chatbot_token");
+    console.log("Token:", token ? "Presente" : "No encontrado");
+    
+    const response = await fetch("http://127.0.0.1:8000/api/admin/manuales", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    
+    console.log("Respuesta del servidor:", response.status);
+
+    if (!response.ok) {
+      throw new Error("Error al cargar manuales");
     }
-  ];
 
-  if (manuales.length === 0) {
-    manualesLista.innerHTML = "<p class='no-data'>No hay manuales disponibles</p>";
-    return;
+    const data = await response.json();
+    const manuales = data.manuales || [];
+
+    if (manuales.length === 0) {
+      manualesLista.innerHTML = "<p class='no-data'>No hay manuales disponibles. Sube tu primer manual usando el formulario de arriba.</p>";
+      return;
+    }
+
+    manualesLista.innerHTML = manuales
+      .map(
+        (manual) => {
+          const fecha = manual.fecha_subida ? new Date(parseFloat(manual.fecha_subida) * 1000).toLocaleDateString('es-ES') : 'N/A';
+          return `
+      <div class="manual-item">
+        <div class="manual-info">
+          <h4>${manual.nombre}</h4>
+          <p>Archivo: ${manual.archivo} | Fecha: ${fecha}</p>
+        </div>
+        <div class="manual-actions">
+          <button class="manual-btn view" onclick="abrirManual('${manual.archivo}')">
+            Ver
+          </button>
+          <button class="manual-btn delete" onclick="confirmarEliminarManual('${manual.archivo}')">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    `;
+        }
+      )
+      .join("");
+  } catch (error) {
+    manualesLista.innerHTML = `<p class='no-data'>Error al cargar manuales: ${error.message}</p>`;
   }
-
-  manualesLista.innerHTML = manuales
-    .map(
-      (manual) => `
-    <div class="manual-item">
-      <div class="manual-info">
-        <h4>${manual.nombre}</h4>
-        <p>Máquina: ${manual.maquina} | Tamaño: ${manual.tamano} | Fecha: ${manual.fecha}</p>
-      </div>
-      <div class="manual-actions">
-        <button class="manual-btn view" onclick="abrirManual('${manual.nombre}')">
-          Ver
-        </button>
-        <button class="manual-btn delete" onclick="confirmarEliminarManual('${manual.nombre}')">
-          Eliminar
-        </button>
-      </div>
-    </div>
-  `
-    )
-    .join("");
 }
 
 function abrirManual(nombreArchivo) {
@@ -574,12 +573,29 @@ function confirmarEliminarManual(nombreArchivo) {
   }
 }
 
-function eliminarManual(nombreArchivo) {
-  // En producción, esto haría una petición al backend
-  alert(`Funcionalidad de eliminación:\n\nPara eliminar el manual "${nombreArchivo}", ve a:\nBackend/data/manuales_pdf/\n\ny elimina el archivo manualmente.`);
-  
-  // Recargar la lista
-  cargarListaManuales();
+async function eliminarManual(nombreArchivo) {
+  try {
+    const token = localStorage.getItem("chatbot_token");
+    
+    const response = await fetch(`http://127.0.0.1:8000/api/admin/manuales/${nombreArchivo}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert(`Manual "${nombreArchivo}" eliminado correctamente`);
+      // Recargar la lista
+      cargarListaManuales();
+    } else {
+      alert(`Error al eliminar el manual: ${data.detail || 'Error desconocido'}`);
+    }
+  } catch (error) {
+    alert(`Error al eliminar el manual: ${error.message}`);
+  }
 }
 
 // -----------------------------------------
@@ -624,33 +640,42 @@ function inicializarFormularioSubida() {
     const uploadBtn = form.querySelector(".upload-btn");
     uploadBtn.disabled = true;
 
-    // Simular subida (en producción, esto sería una petición al backend)
-    setTimeout(() => {
-      mostrarEstadoSubida(
-        "success",
-        `Manual "${file.name}" subido correctamente para "${nombreManual}"`
-      );
+    try {
+      // Crear FormData para enviar el archivo
+      const formData = new FormData();
+      formData.append("archivo", file);
+      formData.append("nombreManual", nombreManual);
+
+      const token = localStorage.getItem("chatbot_token");
       
-      // Mostrar instrucciones
-      setTimeout(() => {
-        mostrarEstadoSubida(
-          "info",
-          `El archivo se guardó en: Backend/data/manuales_pdf/${file.name}\n\n` +
-          `Nombre del manual: ${nombreManual}\n` +
-          (descripcion ? `Descripción: ${descripcion}\n\n` : '\n') +
-          `Para que esté disponible en el sistema, copia manualmente el archivo a esa ubicación.`
-        );
-      }, 2000);
+      const response = await fetch("http://127.0.0.1:8000/api/admin/manuales/upload", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
+        body: formData
+      });
 
-      // Limpiar formulario
-      form.reset();
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        mostrarEstadoSubida("success", `Manual "${nombreManual}" subido correctamente`);
+        
+        // Limpiar formulario
+        form.reset();
+        
+        // Recargar lista de manuales
+        setTimeout(() => {
+          cargarListaManuales();
+        }, 1500);
+      } else {
+        mostrarEstadoSubida("error", data.detail || "Error al subir el manual");
+      }
+    } catch (error) {
+      mostrarEstadoSubida("error", `Error al subir el archivo: ${error.message}`);
+    } finally {
       uploadBtn.disabled = false;
-
-      // Recargar lista
-      setTimeout(() => {
-        cargarListaManuales();
-      }, 3000);
-    }, 2000);
+    }
   });
 }
 

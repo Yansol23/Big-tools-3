@@ -1,9 +1,9 @@
 {
-  "total_diagnosticos": 112,
+  "total_diagnosticos": 114,
   "diagnosticos_por_maquina": {
     "generador_generac": 36,
-    "motor_cummins": 35,
-    "soldadora_miller_ranger": 18,
+    "motor_cummins": 36,
+    "soldadora_miller_ranger": 19,
     "hidrolavadora_karcher": 23
   },
   "diagnosticos_por_categoria": {
@@ -18,30 +18,16 @@
     "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 1,
     "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 7,
     "soldadora_miller_ranger|Problemas de arranque del motor": 2,
-    "soldadora_miller_ranger|Calidad de soldadura deficiente": 3,
+    "soldadora_miller_ranger|Calidad de soldadura deficiente": 4,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 3,
     "hidrolavadora_karcher|El aparato no genera presión": 3,
-    "motor_cummins|Pérdida de potencia": 11,
+    "motor_cummins|Pérdida de potencia": 12,
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3,
     "motor_cummins|Humo excesivo": 1,
     "soldadora_miller_ranger|Motor funciona irregular o se apaga": 2,
     "motor_cummins|Presión de aceite anormal": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-03T21:16:38.570928",
-      "maquina": "motor_cummins",
-      "categoria": "Problemas de sobrecalentamiento",
-      "completado": true,
-      "falla": "Ventilador o embrague de ventilador defectuoso"
-    },
-    {
-      "timestamp": "2025-11-03T21:28:06.167678",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Problemas con salida auxiliar (tomas de corriente)",
-      "completado": true,
-      "falla": "Sobrecarga o problema en regulador"
-    },
     {
       "timestamp": "2025-11-03T21:28:13.589110",
       "maquina": "generador_generac",
@@ -377,6 +363,20 @@
       "categoria": "Presión de aceite anormal",
       "completado": true,
       "falla": "Bomba de aceite defectuosa o cojinetes desgastados"
+    },
+    {
+      "timestamp": "2025-11-08T19:48:14.094466",
+      "maquina": "motor_cummins",
+      "categoria": "Pérdida de potencia",
+      "completado": true,
+      "falla": "Fuga en el sistema de admisión o turbocompresor"
+    },
+    {
+      "timestamp": "2025-11-08T19:53:35.659741",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Calidad de soldadura deficiente",
+      "completado": true,
+      "falla": "Corriente muy baja o velocidad muy rápida"
     }
   ]
 }
