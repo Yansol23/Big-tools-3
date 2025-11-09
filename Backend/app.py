@@ -41,3 +41,9 @@ def root():
 def admin():
     """Página de administración"""
     return FileResponse(str(frontend_path / "admin.html"))
+
+@app.get("/favicon.ico")
+def favicon():
+    """Sirve el favicon"""
+    favicon_path = frontend_path / "assets" / "img" / "logo_bigtools.png"
+    return FileResponse(str(favicon_path))
