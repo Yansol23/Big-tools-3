@@ -1,10 +1,11 @@
 {
-  "total_diagnosticos": 114,
+  "total_diagnosticos": 116,
   "diagnosticos_por_maquina": {
     "generador_generac": 36,
     "motor_cummins": 36,
     "soldadora_miller_ranger": 19,
-    "hidrolavadora_karcher": 23
+    "hidrolavadora_karcher": 23,
+    "prueba": 2
   },
   "diagnosticos_por_categoria": {
     "generador_generac|Problemas con luces LED o alarmas": 29,
@@ -25,23 +26,11 @@
     "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 3,
     "motor_cummins|Humo excesivo": 1,
     "soldadora_miller_ranger|Motor funciona irregular o se apaga": 2,
-    "motor_cummins|Presión de aceite anormal": 1
+    "motor_cummins|Presión de aceite anormal": 1,
+    "prueba|Problemas de Rendimiento": 1,
+    "prueba|Problemas Mecánicos": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-03T21:28:13.589110",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Sobrecarga"
-    },
-    {
-      "timestamp": "2025-11-03T21:29:30.602032",
-      "maquina": "generador_generac",
-      "categoria": "Otros problemas de funcionamiento",
-      "completado": true,
-      "falla": "El disyuntor principal de línea se encuentra en la posición OFF (o ABIERTO)"
-    },
     {
       "timestamp": "2025-11-03T21:29:40.697198",
       "maquina": "motor_cummins",
@@ -377,6 +366,20 @@
       "categoria": "Calidad de soldadura deficiente",
       "completado": true,
       "falla": "Corriente muy baja o velocidad muy rápida"
+    },
+    {
+      "timestamp": "2025-11-08T21:51:10.443750",
+      "maquina": "prueba",
+      "categoria": "Problemas de Rendimiento",
+      "completado": true,
+      "falla": "Desgaste o falta de mantenimiento"
+    },
+    {
+      "timestamp": "2025-11-08T22:01:47.526059",
+      "maquina": "prueba",
+      "categoria": "Problemas Mecánicos",
+      "completado": true,
+      "falla": "Desgaste de componentes mecánicos"
     }
   ]
 }

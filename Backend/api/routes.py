@@ -16,13 +16,41 @@ base = BaseConocimiento()
 motor_global = MotorInferencia(base)
 sesiones = {}
 
-NOMBRES_MAQUINAS = {
-    "Hidrolavadora Kärcher": "hidrolavadora_karcher",
-    "Generador Generac Guardian": "generador_generac",
-    "Motor Cummins": "motor_cummins",
-    "Soldadora Miller Ranger 305D": "soldadora_miller_ranger"
-}
+def normalizar_nombre_para_clave(nombre: str) -> str:
+    """Convierte un nombre de máquina a formato de clave (ej: 'Motor Diesel' -> 'motor_diesel')"""
+    return nombre.lower().replace(' ', '_').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
 
+# Cargar nombres de máquinas dinámicamente desde la base de conocimiento
+def cargar_nombres_maquinas():
+    """Carga los nombres de máquinas desde la base de conocimiento y manuales"""
+    nombres_maquinas = {}
+    try:
+        # Cargar desde base de conocimiento
+        base_conocimiento_path = Path(__file__).parent.parent / "data" / "base_conocimiento.json"
+        if base_conocimiento_path.exists():
+            with open(base_conocimiento_path, 'r', encoding='utf-8') as f:
+                base_conocimiento = json.load(f)
+                for clave_maquina in base_conocimiento.keys():
+                    # Convertir clave a nombre amigable
+                    nombre_amigable = clave_maquina.replace('_', ' ').title()
+                    nombres_maquinas[nombre_amigable] = clave_maquina
+        
+        # Cargar desde manuales para asegurar sincronización
+        manuales_path = Path(__file__).parent.parent / "data" / "manuales.json"
+        if manuales_path.exists():
+            with open(manuales_path, 'r', encoding='utf-8') as f:
+                manuales = json.load(f)
+                for manual in manuales:
+                    nombre = manual["nombre"]
+                    clave = normalizar_nombre_para_clave(nombre)
+                    if nombre not in nombres_maquinas:
+                        nombres_maquinas[nombre] = clave
+    except Exception as e:
+        print(f"Error al cargar nombres de máquinas: {str(e)}")
+    
+    return nombres_maquinas
+
+NOMBRES_MAQUINAS = cargar_nombres_maquinas()
 NOMBRES_AMIGABLES = {v: k for k, v in NOMBRES_MAQUINAS.items()}
 
 def normalizar_nombre_maquina(nombre: str) -> str:
@@ -173,6 +201,7 @@ def avanzar_diagnostico(nombre_maquina: str, categoria: str, respuesta: str = Bo
 
 MANUALES_DIR = Path(__file__).parent.parent / "data" / "manuales_pdf"
 MANUALES_JSON = Path(__file__).parent.parent / "data" / "manuales.json"
+BASE_CONOCIMIENTO_JSON = Path(__file__).parent.parent / "data" / "base_conocimiento.json"
 
 # Crear directorio si no existe
 MANUALES_DIR.mkdir(parents=True, exist_ok=True)
@@ -181,6 +210,192 @@ MANUALES_DIR.mkdir(parents=True, exist_ok=True)
 if not MANUALES_JSON.exists():
     with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
         json.dump([], f, ensure_ascii=False, indent=2)
+
+
+def generar_plantilla_base_conocimiento(nombre_maquina: str, nombre_archivo: str) -> dict:
+    """Genera una plantilla de base de conocimiento para una nueva máquina"""
+    return {
+        "categorias": [
+            {
+                "categoria": "Problemas Eléctricos",
+                "ramas": [
+                    {
+                        "pregunta": "¿La máquina enciende?",
+                        "ramas": [
+                            {
+                                "atributo": "No enciende",
+                                "falla": "Falta de alimentación eléctrica",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Verificar la conexión a la red eléctrica",
+                                    "Revisar el cable de alimentación",
+                                    "Comprobar el interruptor principal",
+                                    "Verificar fusibles o disyuntores"
+                                ]
+                            },
+                            {
+                                "atributo": "Enciende pero se apaga",
+                                "falla": "Protección térmica activada o cortocircuito",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Dejar enfriar la máquina",
+                                    "Verificar ventilación adecuada",
+                                    "Revisar posibles cortocircuitos",
+                                    "Consultar el manual técnico"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "categoria": "Problemas Mecánicos",
+                "ramas": [
+                    {
+                        "pregunta": "¿Hay ruidos anormales?",
+                        "ramas": [
+                            {
+                                "atributo": "Ruido excesivo o vibración",
+                                "falla": "Desgaste de componentes mecánicos",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Verificar el estado de rodamientos",
+                                    "Revisar alineación de componentes",
+                                    "Comprobar el nivel de lubricación",
+                                    "Inspeccionar partes móviles"
+                                ]
+                            },
+                            {
+                                "atributo": "No hay ruidos anormales",
+                                "falla": "Bloqueo o atasco mecánico",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Verificar que no haya obstrucciones",
+                                    "Revisar el sistema de transmisión",
+                                    "Comprobar el estado de correas o cadenas"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "categoria": "Problemas de Rendimiento",
+                "ramas": [
+                    {
+                        "pregunta": "¿La máquina funciona con potencia reducida?",
+                        "ramas": [
+                            {
+                                "atributo": "Sí, baja potencia",
+                                "falla": "Desgaste o falta de mantenimiento",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Realizar mantenimiento preventivo",
+                                    "Verificar filtros y limpiar si es necesario",
+                                    "Revisar el estado de componentes principales",
+                                    "Consultar el manual de mantenimiento"
+                                ]
+                            },
+                            {
+                                "atributo": "No, funciona normal",
+                                "falla": "Posible problema de configuración",
+                                "referencia": nombre_archivo,
+                                "soluciones": [
+                                    "Verificar configuración de parámetros",
+                                    "Revisar el manual de usuario",
+                                    "Contactar con soporte técnico"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "categoria": "Otros Problemas",
+                "ramas": [
+                    {
+                        "falla": "Problema no identificado",
+                        "referencia": nombre_archivo,
+                        "soluciones": [
+                            "Consultar el manual técnico completo",
+                            "Contactar con el servicio técnico autorizado",
+                            "Verificar garantía del equipo"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+
+def agregar_maquina_base_conocimiento(nombre_maquina: str, nombre_archivo: str):
+    """Agrega una nueva máquina a la base de conocimiento"""
+    try:
+        # Leer base de conocimiento actual
+        with open(BASE_CONOCIMIENTO_JSON, 'r', encoding='utf-8') as f:
+            base_conocimiento = json.load(f)
+        
+        # Generar clave normalizada
+        clave_maquina = normalizar_nombre_para_clave(nombre_maquina)
+        
+        # Generar plantilla
+        plantilla = generar_plantilla_base_conocimiento(nombre_maquina, nombre_archivo)
+        
+        # Agregar a la base de conocimiento
+        base_conocimiento[clave_maquina] = plantilla
+        
+        # Guardar base de conocimiento actualizada
+        with open(BASE_CONOCIMIENTO_JSON, 'w', encoding='utf-8') as f:
+            json.dump(base_conocimiento, f, ensure_ascii=False, indent=2)
+        
+        # Actualizar mapeo de nombres
+        NOMBRES_MAQUINAS[nombre_maquina] = clave_maquina
+        NOMBRES_AMIGABLES[clave_maquina] = nombre_maquina
+        
+        # Recargar base de conocimiento en el motor
+        global base, motor_global
+        base = BaseConocimiento()
+        motor_global = MotorInferencia(base)
+        
+        return True
+    except Exception as e:
+        print(f"Error al agregar máquina a base de conocimiento: {str(e)}")
+        return False
+
+
+def eliminar_maquina_base_conocimiento(nombre_maquina: str):
+    """Elimina una máquina de la base de conocimiento"""
+    try:
+        # Leer base de conocimiento actual
+        with open(BASE_CONOCIMIENTO_JSON, 'r', encoding='utf-8') as f:
+            base_conocimiento = json.load(f)
+        
+        # Generar clave normalizada
+        clave_maquina = normalizar_nombre_para_clave(nombre_maquina)
+        
+        # Eliminar de la base de conocimiento si existe
+        if clave_maquina in base_conocimiento:
+            del base_conocimiento[clave_maquina]
+            
+            # Guardar base de conocimiento actualizada
+            with open(BASE_CONOCIMIENTO_JSON, 'w', encoding='utf-8') as f:
+                json.dump(base_conocimiento, f, ensure_ascii=False, indent=2)
+            
+            # Actualizar mapeo de nombres
+            if nombre_maquina in NOMBRES_MAQUINAS:
+                del NOMBRES_MAQUINAS[nombre_maquina]
+            if clave_maquina in NOMBRES_AMIGABLES:
+                del NOMBRES_AMIGABLES[clave_maquina]
+            
+            # Recargar base de conocimiento en el motor
+            global base, motor_global
+            base = BaseConocimiento()
+            motor_global = MotorInferencia(base)
+        
+        return True
+    except Exception as e:
+        print(f"Error al eliminar máquina de base de conocimiento: {str(e)}")
+        return False
 
 
 @router.get("/admin/manuales")
@@ -259,9 +474,13 @@ async def subir_manual(
         with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
             json.dump(manuales, f, ensure_ascii=False, indent=2)
         
+        # Agregar máquina a la base de conocimiento automáticamente
+        if not existe:  # Solo si es una máquina nueva
+            agregar_maquina_base_conocimiento(nombreManual, nombre_archivo)
+        
         return {
             "success": True,
-            "message": f"Manual '{nombreManual}' subido correctamente",
+            "message": f"Manual '{nombreManual}' subido correctamente y agregado a la base de conocimiento",
             "manual": nuevo_manual
         }
     
@@ -285,21 +504,32 @@ def eliminar_manual(
         raise HTTPException(status_code=403, detail="Acceso denegado. Solo administradores.")
     
     try:
+        # Obtener el nombre de la máquina antes de eliminar
+        with open(MANUALES_JSON, 'r', encoding='utf-8') as f:
+            manuales = json.load(f)
+        
+        nombre_maquina = None
+        for manual in manuales:
+            if manual["archivo"] == nombre_archivo:
+                nombre_maquina = manual["nombre"]
+                break
+        
         # Eliminar archivo físico
         ruta_archivo = MANUALES_DIR / nombre_archivo
         if ruta_archivo.exists():
             ruta_archivo.unlink()
         
         # Actualizar JSON
-        with open(MANUALES_JSON, 'r', encoding='utf-8') as f:
-            manuales = json.load(f)
-        
         manuales = [m for m in manuales if m["archivo"] != nombre_archivo]
         
         with open(MANUALES_JSON, 'w', encoding='utf-8') as f:
             json.dump(manuales, f, ensure_ascii=False, indent=2)
         
-        return {"success": True, "message": "Manual eliminado correctamente"}
+        # Eliminar de la base de conocimiento
+        if nombre_maquina:
+            eliminar_maquina_base_conocimiento(nombre_maquina)
+        
+        return {"success": True, "message": "Manual eliminado correctamente y removido de la base de conocimiento"}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al eliminar el manual: {str(e)}")
