@@ -298,15 +298,46 @@ function crearBotonManual(maquina, referencia) {
   // Crear botón
   const btn = document.createElement("button");
   btn.classList.add("manual-btn");
-  btn.innerHTML = `Ver Manual (${referencia})`;
+  btn.innerHTML = `📖 Ver Manual (Pág. ${referencia})`;
   btn.onclick = () => {
-    // Usar la ruta servida por FastAPI
-    const rutaPDF = `/manuales/${archivoPDF}`;
+    // Extraer número de página de la referencia
+    let numeroPagina = extraerNumeroPagina(referencia);
+    
+    // Construir ruta del PDF con el fragmento de página
+    let rutaPDF = `/manuales/${archivoPDF}`;
+    if (numeroPagina) {
+      rutaPDF += `#page=${numeroPagina}`;
+    }
+    
     window.open(rutaPDF, '_blank');
   };
 
   btnContainer.appendChild(btn);
   return btnContainer;
+}
+
+function extraerNumeroPagina(referencia) {
+  // Intenta extraer un número de la referencia
+  // Ejemplos: "ES-8" -> 8, "27" -> 27, "Manual Cummins Sec. 3" -> 3
+  
+  if (!referencia) return null;
+  
+  // Buscar patrones comunes
+  // Patrón 1: "ES-8" o similar -> tomar el número después del guion
+  const patronGuion = /[-]\s*(\d+)/;
+  const matchGuion = referencia.match(patronGuion);
+  if (matchGuion) {
+    return parseInt(matchGuion[1]);
+  }
+  
+  // Patrón 2: Número al final "Sec. 3" -> tomar el último número
+  const patronNumero = /(\d+)/g;
+  const todosNumeros = referencia.match(patronNumero);
+  if (todosNumeros && todosNumeros.length > 0) {
+    return parseInt(todosNumeros[todosNumeros.length - 1]);
+  }
+  
+  return null;
 }
 
 function crearBotonExportarPDF(diagnosticoData) {

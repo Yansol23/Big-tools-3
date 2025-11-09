@@ -98,7 +98,7 @@ def admin_login(username: str = Body(...), password: str = Body(...)):
 
 
 @router.post("/admin/logout")
-def admin_logout(authorization: Optional[str] = Header(None)):
+def admin_logout(authorization: Optional[str] = Header(None, alias="Authorization")):
     """Cierra sesión del administrador."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Token no proporcionado")
@@ -109,7 +109,7 @@ def admin_logout(authorization: Optional[str] = Header(None)):
 
 
 @router.get("/admin/stats")
-def obtener_estadisticas(authorization: Optional[str] = Header(None)):
+def obtener_estadisticas(authorization: Optional[str] = Header(None, alias="Authorization")):
     """Retorna las estadísticas del sistema (requiere autenticación de admin)."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="No autorizado")
@@ -178,6 +178,11 @@ def iniciar_diagnostico(nombre_maquina: str, categoria: str):
 
         # Registrar estadística (usar nombre técnico)
         stats_manager.registrar_diagnostico_iniciado(nombre_tecnico, categoria)
+
+        # Si el diagnóstico llegó directamente a una falla (resultado final), 
+        # marcarlo como completado inmediatamente
+        if "falla" in resultado and "soluciones" in resultado:
+            stats_manager.registrar_diagnostico_completado(nombre_tecnico, categoria, resultado["falla"])
 
         # Retornamos el resultado del Paso 2
         return resultado
@@ -412,7 +417,7 @@ def eliminar_maquina_base_conocimiento(nombre_maquina: str):
 
 
 @router.get("/admin/manuales")
-def listar_manuales(authorization: Optional[str] = Header(None)):
+def listar_manuales(authorization: Optional[str] = Header(None, alias="Authorization")):
     """Obtener lista de manuales disponibles."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Token no proporcionado")
@@ -435,7 +440,7 @@ def listar_manuales(authorization: Optional[str] = Header(None)):
 async def subir_manual(
     nombreManual: str = Form(...),
     archivo: UploadFile = File(...),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None, alias="Authorization")
 ):
     """Subir un nuevo manual PDF."""
     if not authorization or not authorization.startswith("Bearer "):
@@ -504,7 +509,7 @@ async def subir_manual(
 @router.delete("/admin/manuales/{nombre_archivo}")
 def eliminar_manual(
     nombre_archivo: str,
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None, alias="Authorization")
 ):
     """Eliminar un manual."""
     if not authorization or not authorization.startswith("Bearer "):
