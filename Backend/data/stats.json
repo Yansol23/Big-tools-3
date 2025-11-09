@@ -1,15 +1,15 @@
 {
-  "total_diagnosticos": 171,
+  "total_diagnosticos": 176,
   "diagnosticos_por_maquina": {
-    "generador_generac": 44,
+    "generador_generac": 45,
     "motor_cummins": 49,
-    "soldadora_miller_ranger": 32,
-    "hidrolavadora_karcher": 42,
+    "soldadora_miller_ranger": 34,
+    "hidrolavadora_karcher": 44,
     "prueba": 3,
     "diagnostico": 1
   },
   "diagnosticos_por_categoria": {
-    "generador_generac|Problemas con luces LED o alarmas": 32,
+    "generador_generac|Problemas con luces LED o alarmas": 33,
     "motor_cummins|Problemas de sobrecalentamiento": 26,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 6,
     "generador_generac|Problemas de arranque del motor": 4,
@@ -17,56 +17,22 @@
     "soldadora_miller_ranger|Sin salida de soldadura": 6,
     "hidrolavadora_karcher|Una luz parpadea": 9,
     "generador_generac|Otros problemas de funcionamiento": 8,
-    "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 9,
-    "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 14,
+    "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 10,
+    "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 15,
     "soldadora_miller_ranger|Problemas de arranque del motor": 3,
     "soldadora_miller_ranger|Calidad de soldadura deficiente": 5,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 6,
     "hidrolavadora_karcher|El aparato no genera presión": 5,
     "motor_cummins|Pérdida de potencia": 17,
-    "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 8,
+    "hidrolavadora_karcher|El aparato no funciona o no se pone en marcha": 9,
     "motor_cummins|Humo excesivo": 2,
-    "soldadora_miller_ranger|Motor funciona irregular o se apaga": 3,
+    "soldadora_miller_ranger|Motor funciona irregular o se apaga": 4,
     "motor_cummins|Presión de aceite anormal": 2,
     "prueba|Problemas de Rendimiento": 2,
     "prueba|Problemas Mecánicos": 1,
     "diagnostico|Problemas Mecánicos": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-09T16:55:32.700421",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sobrecalentamiento de la unidad",
-      "completado": true,
-      "falla": "Ventilador de enfriamiento defectuoso"
-    },
-    {
-      "timestamp": "2025-11-09T16:56:51.503523",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "El aparato no funciona o no se pone en marcha",
-      "completado": false
-    },
-    {
-      "timestamp": "2025-11-09T16:57:05.864146",
-      "maquina": "generador_generac",
-      "categoria": "Problemas con luces LED o alarmas",
-      "completado": true,
-      "falla": "Mantenimiento programado requerido (Batería)"
-    },
-    {
-      "timestamp": "2025-11-09T16:57:13.438384",
-      "maquina": "motor_cummins",
-      "categoria": "Pérdida de potencia",
-      "completado": true,
-      "falla": "Fuga en el sistema de admisión o turbocompresor"
-    },
-    {
-      "timestamp": "2025-11-09T16:57:24.072225",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sobrecalentamiento de la unidad",
-      "completado": true,
-      "falla": "Rejillas de ventilación obstruidas"
-    },
     {
       "timestamp": "2025-11-09T16:57:34.469542",
       "maquina": "diagnostico",
@@ -380,6 +346,41 @@
       "categoria": "Problemas de arranque del motor",
       "completado": true,
       "falla": "Bujía(s) defectuosa(s)"
+    },
+    {
+      "timestamp": "2025-11-09T19:12:17.920345",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El aparato no funciona o no se pone en marcha",
+      "completado": true,
+      "falla": "No hay tensión de red"
+    },
+    {
+      "timestamp": "2025-11-09T19:12:41.068584",
+      "maquina": "generador_generac",
+      "categoria": "Problemas con luces LED o alarmas",
+      "completado": true,
+      "falla": "Problema con el cargador de batería"
+    },
+    {
+      "timestamp": "2025-11-09T19:12:53.672800",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Sobrecalentamiento de la unidad",
+      "completado": true,
+      "falla": "Rejillas de ventilación obstruidas"
+    },
+    {
+      "timestamp": "2025-11-09T19:18:04.013567",
+      "maquina": "hidrolavadora_karcher",
+      "categoria": "El quemador no se enciende (el agua no calienta)",
+      "completado": true,
+      "falla": "Falta de agua (el dispositivo de seguridad lo impide)"
+    },
+    {
+      "timestamp": "2025-11-09T19:18:12.578107",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Motor funciona irregular o se apaga",
+      "completado": true,
+      "falla": "Carburador desajustado"
     }
   ]
 }
