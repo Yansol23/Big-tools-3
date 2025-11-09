@@ -16,26 +16,28 @@ base = BaseConocimiento()
 motor_global = MotorInferencia(base)
 sesiones = {}
 
+# Mapeo fijo de nombres de manuales a claves de base de conocimiento
+MAPEO_NOMBRES_FIJO = {
+    "Generador Generac Guardian": "generador_generac",
+    "Hidrolavadora Kärcher": "hidrolavadora_karcher",
+    "Motor Cummins": "motor_cummins",
+    "Soldadora Miller Ranger 305D": "soldadora_miller_ranger"
+}
+
 def normalizar_nombre_para_clave(nombre: str) -> str:
     """Convierte un nombre de máquina a formato de clave (ej: 'Motor Diesel' -> 'motor_diesel')"""
-    return nombre.lower().replace(' ', '_').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
+    # Primero verificar si hay un mapeo fijo
+    if nombre in MAPEO_NOMBRES_FIJO:
+        return MAPEO_NOMBRES_FIJO[nombre]
+    # Si no, normalizar el nombre
+    return nombre.lower().replace(' ', '_').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n').replace('ä', 'a').replace('ö', 'o').replace('ü', 'u')
 
 # Cargar nombres de máquinas dinámicamente desde la base de conocimiento
 def cargar_nombres_maquinas():
     """Carga los nombres de máquinas desde la base de conocimiento y manuales"""
     nombres_maquinas = {}
     try:
-        # Cargar desde base de conocimiento
-        base_conocimiento_path = Path(__file__).parent.parent / "data" / "base_conocimiento.json"
-        if base_conocimiento_path.exists():
-            with open(base_conocimiento_path, 'r', encoding='utf-8') as f:
-                base_conocimiento = json.load(f)
-                for clave_maquina in base_conocimiento.keys():
-                    # Convertir clave a nombre amigable
-                    nombre_amigable = clave_maquina.replace('_', ' ').title()
-                    nombres_maquinas[nombre_amigable] = clave_maquina
-        
-        # Cargar desde manuales para asegurar sincronización
+        # Primero cargar desde manuales (tienen los nombres correctos)
         manuales_path = Path(__file__).parent.parent / "data" / "manuales.json"
         if manuales_path.exists():
             with open(manuales_path, 'r', encoding='utf-8') as f:
@@ -43,8 +45,19 @@ def cargar_nombres_maquinas():
                 for manual in manuales:
                     nombre = manual["nombre"]
                     clave = normalizar_nombre_para_clave(nombre)
-                    if nombre not in nombres_maquinas:
-                        nombres_maquinas[nombre] = clave
+                    nombres_maquinas[nombre] = clave
+        
+        # Luego cargar desde base de conocimiento para máquinas sin manual
+        base_conocimiento_path = Path(__file__).parent.parent / "data" / "base_conocimiento.json"
+        if base_conocimiento_path.exists():
+            with open(base_conocimiento_path, 'r', encoding='utf-8') as f:
+                base_conocimiento = json.load(f)
+                for clave_maquina in base_conocimiento.keys():
+                    # Solo agregar si no existe ya (prioridad a manuales.json)
+                    if clave_maquina not in nombres_maquinas.values():
+                        # Convertir clave a nombre amigable
+                        nombre_amigable = clave_maquina.replace('_', ' ').title()
+                        nombres_maquinas[nombre_amigable] = clave_maquina
     except Exception as e:
         print(f"Error al cargar nombres de máquinas: {str(e)}")
     
