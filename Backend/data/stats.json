@@ -1,16 +1,16 @@
 {
-  "total_diagnosticos": 178,
+  "total_diagnosticos": 181,
   "diagnosticos_por_maquina": {
     "generador_generac": 45,
-    "motor_cummins": 49,
-    "soldadora_miller_ranger": 36,
+    "motor_cummins": 51,
+    "soldadora_miller_ranger": 37,
     "hidrolavadora_karcher": 44,
     "prueba": 3,
     "diagnostico": 1
   },
   "diagnosticos_por_categoria": {
     "generador_generac|Problemas con luces LED o alarmas": 33,
-    "motor_cummins|Problemas de sobrecalentamiento": 26,
+    "motor_cummins|Problemas de sobrecalentamiento": 28,
     "soldadora_miller_ranger|Problemas con salida auxiliar (tomas de corriente)": 6,
     "generador_generac|Problemas de arranque del motor": 4,
     "motor_cummins|Problemas de arranque": 2,
@@ -20,7 +20,7 @@
     "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 11,
     "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 15,
     "soldadora_miller_ranger|Problemas de arranque del motor": 3,
-    "soldadora_miller_ranger|Calidad de soldadura deficiente": 6,
+    "soldadora_miller_ranger|Calidad de soldadura deficiente": 7,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 6,
     "hidrolavadora_karcher|El aparato no genera presión": 5,
     "motor_cummins|Pérdida de potencia": 17,
@@ -33,27 +33,6 @@
     "diagnostico|Problemas Mecánicos": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-09T18:06:32.264513",
-      "maquina": "generador_generac",
-      "categoria": "Otros problemas de funcionamiento",
-      "completado": true,
-      "falla": "Botón defectuoso, cableado incorrecto o tarjeta de control defectuosa"
-    },
-    {
-      "timestamp": "2025-11-09T18:06:44.915133",
-      "maquina": "motor_cummins",
-      "categoria": "Presión de aceite anormal",
-      "completado": true,
-      "falla": "Válvula de alivio de presión pegada o aceite muy viscoso"
-    },
-    {
-      "timestamp": "2025-11-09T18:06:57.133771",
-      "maquina": "soldadora_miller_ranger",
-      "categoria": "Sobrecalentamiento de la unidad",
-      "completado": true,
-      "falla": "Ventilador de enfriamiento defectuoso"
-    },
     {
       "timestamp": "2025-11-09T18:10:33.949660",
       "maquina": "motor_cummins",
@@ -381,6 +360,27 @@
       "categoria": "Sobrecalentamiento de la unidad",
       "completado": true,
       "falla": "Ventilador de enfriamiento defectuoso"
+    },
+    {
+      "timestamp": "2025-11-10T21:42:08.600573",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Ventilador o embrague de ventilador defectuoso"
+    },
+    {
+      "timestamp": "2025-11-10T22:26:32.153545",
+      "maquina": "motor_cummins",
+      "categoria": "Problemas de sobrecalentamiento",
+      "completado": true,
+      "falla": "Ventilador o embrague de ventilador defectuoso"
+    },
+    {
+      "timestamp": "2025-11-10T22:26:56.924945",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Calidad de soldadura deficiente",
+      "completado": true,
+      "falla": "Corriente muy alta o polaridad incorrecta"
     }
   ]
 }
