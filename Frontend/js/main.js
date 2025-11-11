@@ -100,7 +100,12 @@ window.addEventListener('load', initParticles);
 // ========== VARIABLES PRINCIPALES ==========
 const chatWindow = document.getElementById("chat-window");
 const resetBtn = document.getElementById("reset-button");
-const API_URL = "http://127.0.0.1:8000/api";
+// API_URL se carga desde config.js - si no está definida, usar valor por defecto
+if (typeof window.API_URL === 'undefined') {
+    window.API_URL = "http://127.0.0.1:8000/api";
+}
+// Usar la variable global
+const API_URL = window.API_URL;
 
 let sessionState = {
   maquina: null,

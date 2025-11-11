@@ -2,7 +2,12 @@
 // Big Tools - Panel de Administración
 // ------------------------------------
 
-const API_URL = "http://127.0.0.1:8000/api";
+// API_URL se carga desde config.js - si no está definida, usar valor por defecto
+if (typeof window.API_URL === 'undefined') {
+    window.API_URL = "http://127.0.0.1:8000/api";
+}
+// Usar la variable global
+const API_URL = window.API_URL;
 
 // Elementos del DOM
 const dashboard = document.getElementById("dashboard");

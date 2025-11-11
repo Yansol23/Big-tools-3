@@ -1,9 +1,9 @@
 {
-  "total_diagnosticos": 176,
+  "total_diagnosticos": 178,
   "diagnosticos_por_maquina": {
     "generador_generac": 45,
     "motor_cummins": 49,
-    "soldadora_miller_ranger": 34,
+    "soldadora_miller_ranger": 36,
     "hidrolavadora_karcher": 44,
     "prueba": 3,
     "diagnostico": 1
@@ -17,10 +17,10 @@
     "soldadora_miller_ranger|Sin salida de soldadura": 6,
     "hidrolavadora_karcher|Una luz parpadea": 9,
     "generador_generac|Otros problemas de funcionamiento": 8,
-    "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 10,
+    "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 11,
     "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 15,
     "soldadora_miller_ranger|Problemas de arranque del motor": 3,
-    "soldadora_miller_ranger|Calidad de soldadura deficiente": 5,
+    "soldadora_miller_ranger|Calidad de soldadura deficiente": 6,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 6,
     "hidrolavadora_karcher|El aparato no genera presión": 5,
     "motor_cummins|Pérdida de potencia": 17,
@@ -33,20 +33,6 @@
     "diagnostico|Problemas Mecánicos": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-09T16:57:34.469542",
-      "maquina": "diagnostico",
-      "categoria": "Problemas Mecánicos",
-      "completado": true,
-      "falla": "Bloqueo o atasco mecánico"
-    },
-    {
-      "timestamp": "2025-11-09T18:06:17.335524",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "Una luz parpadea",
-      "completado": true,
-      "falla": "Detector de llamas ha apagado"
-    },
     {
       "timestamp": "2025-11-09T18:06:32.264513",
       "maquina": "generador_generac",
@@ -381,6 +367,20 @@
       "categoria": "Motor funciona irregular o se apaga",
       "completado": true,
       "falla": "Carburador desajustado"
+    },
+    {
+      "timestamp": "2025-11-10T21:17:55.184317",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Calidad de soldadura deficiente",
+      "completado": true,
+      "falla": "Corriente muy alta o polaridad incorrecta"
+    },
+    {
+      "timestamp": "2025-11-10T21:39:30.244378",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Sobrecalentamiento de la unidad",
+      "completado": true,
+      "falla": "Ventilador de enfriamiento defectuoso"
     }
   ]
 }

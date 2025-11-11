@@ -34,7 +34,38 @@ cd Big-Tools-Sistema-Experto
 
 ## Inicio Rapido
 
-### Pasos para Ejecutar el Sistema
+### 🚀 Método Recomendado: Iniciar como Aplicación (Más Fácil)
+
+**Para usuarios finales que solo quieren usar el sistema:**
+
+#### Opción 1: Inicio Rápido (Doble Clic)
+
+1. **Primera vez:** Ejecuta `CREAR_ACCESO_DIRECTO_ESCRITORIO.bat` (doble clic)
+   - Esto creará un acceso directo en tu escritorio llamado "Big Tools"
+
+2. **Cada vez que quieras usar el sistema:**
+   - Haz doble clic en "Big Tools" en tu escritorio
+   - El sistema se iniciará automáticamente
+   - Se abrirá el navegador con la aplicación
+   - ¡Listo para usar!
+
+#### Opción 2: Inicio Automático con Windows
+
+1. Ejecuta `INSTALAR_INICIO_AUTOMATICO.bat` (doble clic)
+2. El sistema se iniciará automáticamente cada vez que enciendas tu computadora
+3. Solo abre tu navegador y ve a `http://127.0.0.1:8000`
+
+#### Opción 3: Inicio Manual
+
+1. Haz doble clic en `INICIAR_SISTEMA.bat`
+2. Espera a que se abra el navegador automáticamente
+3. ¡Listo!
+
+---
+
+### 🔧 Método Avanzado: Inicio Manual (Para Desarrolladores)
+
+Si prefieres iniciar el servidor manualmente:
 
 #### 1. Instalar Dependencias (solo la primera vez)
 ```bash
@@ -49,15 +80,26 @@ cd Backend
 ```
 
 #### 3. Iniciar el Servidor
+
+**Opción A: Solo para uso local (127.0.0.1)**
 ```bash
 python -m uvicorn app:app --reload --host 127.0.0.1 --port 8000
 ```
+
+**Opción B: Para acceso desde otros dispositivos en la red**
+```bash
+python -m uvicorn app:app --reload --host 0.0.0.0 --port 8000
+```
+> **Nota:** Con `--host 0.0.0.0` el servidor será accesible desde otros dispositivos en tu red local usando tu IP (ej: `http://192.168.1.100:8000`)
 
 #### 4. Abrir el Navegador
 Abre tu navegador y ve a:
 ```
 http://127.0.0.1:8000
 ```
+(O si el servidor está en otro equipo: `http://IP_DEL_SERVIDOR:8000`)
+
+> **Nota:** El sistema detecta automáticamente la URL del servidor. No necesitas configurar nada manualmente.
 
 #### 5. Iniciar Sesion
 Ingresa las credenciales (ver seccion Credenciales abajo)
@@ -72,10 +114,43 @@ Una vez que el servidor este corriendo:
 
 ### Notas Importantes
 
+**Si usas el método de aplicación (INICIAR_SISTEMA.bat):**
+- NO cierres la ventana que se abre mientras uses el sistema
+- Para detener el servidor: cierra la ventana o presiona cualquier tecla cuando te lo pida
+- El sistema se iniciará automáticamente cada vez que ejecutes el script
+
+**Si usas el método manual:**
 - NO cierres la ventana de PowerShell/Terminal mientras uses el sistema
 - Para detener el servidor: presiona `CTRL+C`
 - Para reiniciar: vuelve a ejecutar el comando del paso 3
 - El servidor se reiniciara automaticamente si cambias el codigo (flag `--reload`)
+
+### Configuración para Múltiples Usuarios
+
+Si quieres que varios técnicos usen el sistema sin ejecutar el backend en cada computadora:
+
+1. **Ejecuta el servidor en un equipo central** (servidor/computadora principal):
+   ```bash
+   python -m uvicorn app:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. **Obtén la IP del servidor** (ej: `192.168.1.100`)
+   - En Windows: `ipconfig` (busca "Dirección IPv4")
+   - En Linux/Mac: `ifconfig` o `ip addr`
+
+3. **Los técnicos solo necesitan abrir su navegador** y acceder a:
+   ```
+   http://192.168.1.100:8000
+   ```
+   (Reemplaza `192.168.1.100` con la IP real del servidor)
+
+> **¡Importante!** Los técnicos NO deben abrir el archivo `index.html` directamente desde el explorador de archivos. Deben acceder a través de la URL del servidor (`http://IP:8000`).
+
+> **Ventaja:** 
+> - Solo una computadora necesita ejecutar el servidor
+> - Los técnicos no necesitan instalar Python ni dependencias
+> - El sistema detecta automáticamente la URL del servidor
+> - Todo funciona desde el navegador web
 
 ## Credenciales
 
