@@ -1,9 +1,9 @@
 {
-  "total_diagnosticos": 182,
+  "total_diagnosticos": 183,
   "diagnosticos_por_maquina": {
     "generador_generac": 46,
     "motor_cummins": 51,
-    "soldadora_miller_ranger": 37,
+    "soldadora_miller_ranger": 38,
     "hidrolavadora_karcher": 44,
     "prueba": 3,
     "diagnostico": 1
@@ -20,7 +20,7 @@
     "soldadora_miller_ranger|Sobrecalentamiento de la unidad": 11,
     "hidrolavadora_karcher|El quemador no se enciende (el agua no calienta)": 15,
     "soldadora_miller_ranger|Problemas de arranque del motor": 3,
-    "soldadora_miller_ranger|Calidad de soldadura deficiente": 7,
+    "soldadora_miller_ranger|Calidad de soldadura deficiente": 8,
     "hidrolavadora_karcher|Una luz está encendida (fija)": 6,
     "hidrolavadora_karcher|El aparato no genera presión": 5,
     "motor_cummins|Pérdida de potencia": 17,
@@ -33,13 +33,6 @@
     "diagnostico|Problemas Mecánicos": 1
   },
   "historial": [
-    {
-      "timestamp": "2025-11-09T18:10:53.313420",
-      "maquina": "hidrolavadora_karcher",
-      "categoria": "El aparato no genera presión",
-      "completado": true,
-      "falla": "Aire en el sistema"
-    },
     {
       "timestamp": "2025-11-09T18:11:06.463217",
       "maquina": "soldadora_miller_ranger",
@@ -380,6 +373,13 @@
       "maquina": "generador_generac",
       "categoria": "Problemas con luces LED o alarmas",
       "completado": false
+    },
+    {
+      "timestamp": "2025-11-10T22:35:14.811255",
+      "maquina": "soldadora_miller_ranger",
+      "categoria": "Calidad de soldadura deficiente",
+      "completado": true,
+      "falla": "Corriente muy baja o velocidad muy rápida"
     }
   ]
 }

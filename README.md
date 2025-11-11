@@ -178,33 +178,89 @@ El sistema cuenta con **dos tipos de usuarios** con diferentes niveles de acceso
 3. **Motor Cummins** - 5 categorías
 4. **Soldadora Miller Ranger 305D** - 6 categorías
 
-## 📁 Estructura
+## 📁 Estructura del Proyecto
 
 ```
 Big-tools-3/
-├── Backend/
-│   ├── app.py                 # Aplicación FastAPI
-│   ├── api/
-│   │   ├── auth.py           # Autenticación
-│   │   ├── routes.py         # Endpoints
-│   │   ├── stats.py          # Estadísticas
-│   │   ├── engine.py         # Motor de inferencia
-│   │   └── base_conocimiento.py
-│   └── data/
-│       ├── base_conocimiento.json
-│       ├── stats.json
-│       ├── users.json
-│       └── manuales_pdf/
 │
-├── Frontend/
-│   ├── index.html            # Chatbot
-│   ├── admin.html            # Dashboard
-│   ├── css/
-│   └── js/
+├── Backend/                          # Servidor FastAPI
+│   ├── app.py                        # Aplicación principal FastAPI
+│   ├── __init__.py                   # Inicialización del módulo
+│   │
+│   ├── api/                          # Módulos de la API
+│   │   ├── __init__.py               # Inicialización del módulo API
+│   │   ├── auth.py                   # Autenticación y autorización
+│   │   ├── routes.py                 # Endpoints principales de la API
+│   │   ├── stats.py                  # Estadísticas y métricas
+│   │   ├── engine.py                 # Motor de inferencia del sistema experto
+│   │   ├── nodo.py                   # Clase Nodo para árbol de decisión
+│   │   ├── response.py               # Modelos de respuesta
+│   │   └── base_conocimiento.py      # Gestión de base de conocimiento
+│   │
+│   └── data/                         # Datos y archivos estáticos
+│       ├── base_conocimiento.json    # Base de conocimiento del sistema experto
+│       ├── stats.json                # Estadísticas del sistema
+│       ├── users.json                # Usuarios y credenciales
+│       ├── manuales.json             # Configuración de manuales PDF
+│       └── manuales_pdf/             # Carpeta de manuales PDF
+│           ├── Generac_Manual_Usuario_Guardian_Series (1).pdf
+│           ├── HIDROLAVADORA.pdf
+│           ├── MANUAL CUMMINS 2.pdf
+│           └── ranger_305d.pdf
 │
-├── INICIAR_BIG_TOOLS.bat     # Script principal (ejecutar este)
-└── requirements.txt          # Dependencias
+├── Frontend/                         # Interfaz de usuario
+│   ├── index.html                    # Página principal del chatbot
+│   ├── admin.html                    # Dashboard administrativo
+│   │
+│   ├── assets/                       # Recursos estáticos
+│   │   └── img/                      # Imágenes del sistema
+│   │       ├── logo_bigtools.png     # Logo de Big Tools
+│   │       ├── hidrolavadora.JPG     # Imagen de hidrolavadora
+│   │       ├── generador.JPG         # Imagen de generador
+│   │       ├── motor.JPG             # Imagen de motor
+│   │       ├── soldadora.JPG         # Imagen de soldadora
+│   │       └── INSTRUCCIONES_IMAGENES.txt
+│   │
+│   ├── css/                          # Estilos CSS
+│   │   ├── style.css                 # Estilos principales del chatbot
+│   │   └── admin.css                 # Estilos del dashboard admin
+│   │
+│   └── js/                           # Scripts JavaScript
+│       ├── main.js                   # Lógica principal del chatbot
+│       ├── admin.js                  # Lógica del dashboard admin
+│       └── config.js                 # Configuración del frontend
+│
+├── INICIAR_BIG_TOOLS.bat             # Script principal de inicio (Windows)
+├── run.bat                           # Script alternativo de ejecución (Windows)
+├── run.sh                            # Script de ejecución (Linux/Mac)
+├── run_simple.py                     # Script Python simple para iniciar servidor
+├── requirements.txt                  # Dependencias de Python
+├── COMO_USAR.txt                     # Instrucciones de uso
+├── INFORME_SISTEMA_EXPERTO.md        # Informe técnico del sistema
+└── README.md                         # Este archivo
 ```
+
+### Descripción de Componentes Principales
+
+#### Backend (`Backend/`)
+- **`app.py`**: Punto de entrada de la aplicación FastAPI, configura el servidor y las rutas principales
+- **`api/auth.py`**: Maneja la autenticación de usuarios (login, logout, validación de tokens)
+- **`api/routes.py`**: Define todos los endpoints de la API REST
+- **`api/engine.py`**: Motor de inferencia que procesa el árbol de decisión del sistema experto
+- **`api/nodo.py`**: Clase que representa los nodos del árbol de decisión
+- **`api/base_conocimiento.py`**: Carga y gestiona la base de conocimiento desde JSON
+- **`api/stats.py`**: Genera y actualiza estadísticas de uso del sistema
+- **`data/`**: Contiene todos los archivos de datos (JSON) y manuales PDF
+
+#### Frontend (`Frontend/`)
+- **`index.html`**: Interfaz principal del chatbot de diagnóstico
+- **`admin.html`**: Dashboard administrativo con estadísticas y gestión
+- **`js/main.js`**: Lógica del chatbot, comunicación con API, manejo de sesiones
+- **`js/admin.js`**: Lógica del dashboard, gráficos, gestión de manuales
+- **`js/config.js`**: Configuración de URLs y parámetros del frontend
+- **`css/style.css`**: Estilos visuales del chatbot
+- **`css/admin.css`**: Estilos del dashboard administrativo
+- **`assets/img/`**: Imágenes de las máquinas y logo del sistema
 
 ## 🛠️ Instalación
 
