@@ -202,26 +202,13 @@ Big-tools-3/
 │   ├── css/
 │   └── js/
 │
-├── test_backend.bat          # Iniciar backend (Windows)
-├── run_simple.py             # Iniciar todo (Python)
+├── INICIAR_BIG_TOOLS.bat     # Script principal (ejecutar este)
 └── requirements.txt          # Dependencias
 ```
 
 ## 🛠️ Instalación
 
-### 1. Instalar dependencias
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Iniciar backend
-```bash
-cd Backend
-python -m uvicorn app:app --reload
-```
-
-### 3. Abrir frontend
-Abre `Frontend/index.html` en tu navegador.
+El script `INICIAR_BIG_TOOLS.bat` instala automáticamente las dependencias si es necesario. Solo necesitas ejecutarlo.
 
 ## 📊 Endpoints API
 
@@ -238,19 +225,22 @@ Abre `Frontend/index.html` en tu navegador.
 
 ## 🎯 Uso
 
-### Chatbot
-1. Abre `Frontend/index.html`
-2. Selecciona una máquina
-3. Elige una categoría
-4. Responde las preguntas
-5. Obtén diagnóstico y soluciones
-6. Accede al manual PDF si está disponible
+### Iniciar el Sistema
+1. Ejecuta `INICIAR_BIG_TOOLS.bat`
+2. Espera a que se abra el navegador
+3. Inicia sesión con tus credenciales
 
-### Dashboard
-1. Abre `Frontend/admin.html`
-2. Login: admin / 1234
-3. Ver estadísticas o gestionar manuales
-4. Actualizar datos en tiempo real
+### Usar el Chatbot
+1. Selecciona una máquina
+2. Elige una categoría
+3. Responde las preguntas
+4. Obtén diagnóstico y soluciones
+5. Accede al manual PDF si está disponible
+
+### Usar el Dashboard (Solo Admin)
+1. Haz clic en "Modo Administración" (visible solo para admin)
+2. Ver estadísticas o gestionar manuales
+3. Actualizar datos en tiempo real
 
 ## 📚 Gestión de Manuales
 
@@ -300,13 +290,11 @@ pip3 install -r requirements.txt
 pip install -r requirements.txt
 ```
 
-### Backend no inicia
+### El script no inicia el servidor
 **Solución:**
-```bash
-# Asegúrate de estar en la carpeta correcta
-cd Backend
-python -m uvicorn app:app --reload --host 127.0.0.1 --port 8000
-```
+- Verifica que Python esté instalado correctamente
+- Ejecuta `python --version` en una terminal para verificar
+- Revisa la ventana del servidor que se abre para ver errores
 
 ### Frontend no conecta
 **Solución:**
